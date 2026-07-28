@@ -6,11 +6,18 @@ Nova-Trader-BM
 """
 
 from core.logger import info
+from risk.risk_manager import RiskManager
+from broker.orders import OrderManager
+from journal.trades import TradeJournal
 
 
 class TradingEngine:
 
     def __init__(self):
+
+        self.risk = RiskManager()
+        self.orders = OrderManager()
+        self.journal = TradeJournal()
 
         info("Trading Engine Initialized")
 
@@ -24,4 +31,10 @@ class TradingEngine:
 
     def execute(self):
 
-        info("Execution Complete")
+        if self.risk.can_trade():
+
+            info("Risk Check Passed")
+
+        else:
+
+            info("Trading Blocked By Risk Manager")
