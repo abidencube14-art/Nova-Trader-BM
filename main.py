@@ -1,31 +1,37 @@
 """
 ==========================================
 Nova-Trader-BM
-Version 1.0.0
 ==========================================
 """
 
 from config import BOT_NAME, VERSION
+from core.engine import TradingEngine
+from core.logger import info
+
 
 def banner():
 
     print("=" * 45)
-    print(f"{BOT_NAME}  v{VERSION}")
+    print(f"{BOT_NAME} v{VERSION}")
     print("=" * 45)
-    print("Starting bot...")
-    print()
+
 
 def main():
 
     banner()
 
-    print("Loading configuration...")
+    info("Loading Nova-Trader-BM...")
 
-    print("Configuration Loaded.")
+    engine = TradingEngine()
 
-    print()
+    engine.start()
 
-    print("Waiting for MT5 connection...")
+    engine.analyse_market()
+
+    engine.execute()
+
+    info("Bot Ready.")
+
 
 if __name__ == "__main__":
     main()
