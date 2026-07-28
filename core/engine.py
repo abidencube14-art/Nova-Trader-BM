@@ -15,6 +15,10 @@ from journal.trades import TradeJournal
 
 from strategy.manager import StrategyManager
 
+from analytics.statistics import Statistics
+
+from services.notifications import NotificationService
+
 
 class TradingEngine:
 
@@ -28,13 +32,20 @@ class TradingEngine:
 
         self.strategy = StrategyManager()
 
+        self.stats = Statistics()
+
+        self.notify = NotificationService()
+
         info("Trading Engine Initialized")
 
     def start(self):
 
         info("Engine Started")
 
-        info(f"Strategy: {self.strategy.current_strategy()}")
+        self.notify.send(
+            "SYSTEM",
+            "Nova-Trader-BM Started"
+        )
 
     def analyse_market(self, data):
 
@@ -52,4 +63,4 @@ class TradingEngine:
 
         else:
 
-            info("Risk Manager Blocked Trading")
+            info("Trading Blocked")
