@@ -7,35 +7,45 @@ Nova-Trader-BM
 
 from core.logger import info
 
-from core.event_manager import EventManager
-
-from events import events
+from state.system_state import SystemState
 
 
 class TradingEngine:
 
+
     def __init__(self):
 
-        self.events = EventManager()
+        self.state = SystemState()
 
         info(
 
-            "Trading Engine Ready"
+            "Nova Engine Initialized"
 
         )
+
 
     def start(self):
 
-        info(
+        self.state.update(
 
-            "Engine Started"
+            "bot_status",
+
+            "ONLINE"
 
         )
 
-        self.events.emit(
 
-            events.BOT_STARTED,
+        self.state.update(
 
-            "Nova-Trader-BM"
+            "brain_status",
+
+            "ACTIVE"
+
+        )
+
+
+        info(
+
+            "Nova-Trader-BM Started"
 
         )
