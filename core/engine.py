@@ -7,60 +7,35 @@ Nova-Trader-BM
 
 from core.logger import info
 
-from risk.risk_manager import RiskManager
+from core.event_manager import EventManager
 
-from broker.orders import OrderManager
-
-from journal.trades import TradeJournal
-
-from strategy.manager import StrategyManager
-
-from analytics.statistics import Statistics
-
-from services.notifications import NotificationService
+from events import events
 
 
 class TradingEngine:
 
     def __init__(self):
 
-        self.risk = RiskManager()
+        self.events = EventManager()
 
-        self.orders = OrderManager()
+        info(
 
-        self.journal = TradeJournal()
+            "Trading Engine Ready"
 
-        self.strategy = StrategyManager()
-
-        self.stats = Statistics()
-
-        self.notify = NotificationService()
-
-        info("Trading Engine Initialized")
+        )
 
     def start(self):
 
-        info("Engine Started")
+        info(
 
-        self.notify.send(
-            "SYSTEM",
-            "Nova-Trader-BM Started"
+            "Engine Started"
+
         )
 
-    def analyse_market(self, data):
+        self.events.emit(
 
-        signal = self.strategy.analyse(data)
+            events.BOT_STARTED,
 
-        info(f"Signal: {signal}")
+            "Nova-Trader-BM"
 
-        return signal
-
-    def execute(self):
-
-        if self.risk.can_trade():
-
-            info("Risk Check Passed")
-
-        else:
-
-            info("Trading Blocked")
+        )
