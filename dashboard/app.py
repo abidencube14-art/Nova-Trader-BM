@@ -1,6 +1,6 @@
 """
 ==========================================
-Nova Mission Control API
+Nova Mission Control
 Nova-Trader-BM
 ==========================================
 """
@@ -12,7 +12,9 @@ from dashboard.data import DashboardData
 
 app = Flask(__name__)
 
+
 data = DashboardData()
+
 
 
 @app.route("/")
@@ -21,11 +23,131 @@ def home():
 
     return """
 
-    <h1>Nova Mission Control</h1>
+<!DOCTYPE html>
 
-    <p>System Online</p>
+<html>
 
-    """
+<head>
+
+<title>
+Nova Mission Control
+</title>
+
+
+<link rel="stylesheet" href="/static/style.css">
+
+
+</head>
+
+
+<body>
+
+
+<div class="title">
+
+NOVA MISSION CONTROL
+
+</div>
+
+
+
+<div class="card">
+
+<div class="header">
+SYSTEM STATUS
+</div>
+
+
+<p>
+Bot:
+<span class="online">
+ONLINE
+</span>
+</p>
+
+
+<p>
+Brain:
+ACTIVE
+</p>
+
+
+<p>
+Learning Engine:
+ACTIVE
+</p>
+
+
+</div>
+
+
+
+<div class="card">
+
+<div class="header">
+TRADING TELEMETRY
+</div>
+
+
+<p>
+Confidence:
+
+<span class="value">
+94%
+</span>
+
+</p>
+
+
+<p>
+Risk:
+0.75%
+
+</p>
+
+
+<p>
+Trades Today:
+0
+
+</p>
+
+
+</div>
+
+
+
+<div class="card">
+
+<div class="header">
+ACCOUNT PERFORMANCE
+</div>
+
+
+<p>
+Win Rate:
+0%
+
+</p>
+
+
+<p>
+Profit:
+0
+
+</p>
+
+
+</div>
+
+
+
+</body>
+
+</html>
+
+"""
+
 
 
 @app.route("/status")
@@ -37,6 +159,7 @@ def status():
         data.get_status()
 
     )
+
 
 
 if __name__ == "__main__":
