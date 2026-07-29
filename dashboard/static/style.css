@@ -1,0 +1,51 @@
+body {
+
+    background:#050510;
+
+    color:#00ffff;
+
+    font-family: "Courier New", monospace;
+
+}
+
+
+.card {
+
+    border:1px solid #00ffff;
+
+    padding:20px;
+
+    margin:15px;
+
+    background:#0a0a20;
+
+    box-shadow:
+    0 0 15px #00ffff;
+
+}
+
+
+.online {
+
+    color:#00ff66;
+
+}
+
+
+.warning {
+
+    color:#ffcc00;
+
+}
+
+
+.title {
+
+    font-size:30px;
+
+    text-align:center;
+
+    text-shadow:
+    0 0 10px #00ffff;
+
+}
