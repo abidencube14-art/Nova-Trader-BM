@@ -1,6 +1,6 @@
 """
 ==========================================
-Candlestick Pattern Recognition
+Advanced Candle Patterns
 Nova-Trader-BM
 ==========================================
 """
@@ -8,64 +8,90 @@ Nova-Trader-BM
 
 class CandlePatterns:
 
+    def body(self, candle):
+
+        return abs(candle.close - candle.open)
+
     def bullish_engulfing(self, data):
 
         if len(data) < 2:
+
             return False
 
-        previous = data.iloc[-2]
+        p = data.iloc[-2]
 
-        current = data.iloc[-1]
+        c = data.iloc[-1]
 
         return (
 
-            previous.close < previous.open
+            p.close < p.open
 
             and
 
-            current.close > current.open
+            c.close > c.open
 
             and
 
-            current.close > previous.open
+            c.open < p.close
 
             and
 
-            current.open < previous.close
+            c.close > p.open
 
         )
 
     def bearish_engulfing(self, data):
 
         if len(data) < 2:
+
             return False
 
-        previous = data.iloc[-2]
+        p = data.iloc[-2]
 
-        current = data.iloc[-1]
+        c = data.iloc[-1]
 
         return (
 
-            previous.close > previous.open
+            p.close > p.open
 
             and
 
-            current.close < current.open
+            c.close < c.open
 
             and
 
-            current.open > previous.close
+            c.open > p.close
 
             and
 
-            current.close < previous.open
+            c.close < p.open
 
         )
 
+    def hammer(self, data):
+
+        c = data.iloc[-1]
+
+        body = abs(c.close - c.open)
+
+        lower = min(c.close, c.open) - c.low
+
+        return lower > body * 2
+
+    def shooting_star(self, data):
+
+        c = data.iloc[-1]
+
+        body = abs(c.close - c.open)
+
+        upper = c.high - max(c.close, c.open)
+
+        return upper > body * 2
+
     def doji(self, data):
 
-        candle = data.iloc[-1]
+        c = data.iloc[-1]
 
-        body = abs(candle.close - candle.open)
+        body = abs(c.close - c.open)
 
-        return body <= (candle.high - candle.low) * 0.1
+        return body <= (c.high - c.low) * 0.1
