@@ -175,3 +175,38 @@ button:hover {
     0 0 10px white;
 
 }
+
+@media(max-width:600px){
+
+
+body{
+
+    padding:10px;
+
+}
+
+
+.title{
+
+    font-size:22px;
+
+}
+
+
+.card{
+
+    margin:10px 0;
+
+    padding:15px;
+
+}
+
+
+.value{
+
+    font-size:24px;
+
+}
+
+
+}
