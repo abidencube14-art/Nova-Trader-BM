@@ -60,7 +60,7 @@ SYSTEM STATUS
 
 <p>
 Bot:
-<span class="online">
+<span id="bot">
 ONLINE
 </span>
 </p>
@@ -68,13 +68,9 @@ ONLINE
 
 <p>
 Brain:
+<span id="brain">
 ACTIVE
-</p>
-
-
-<p>
-Learning Engine:
-ACTIVE
+</span>
 </p>
 
 
@@ -85,32 +81,17 @@ ACTIVE
 <div class="card">
 
 <div class="header">
-TRADING TELEMETRY
+CONFIDENCE ENGINE
 </div>
 
 
-<p>
-Confidence:
+<div class="value">
 
-<span class="value">
-94%
-</span>
+<span id="confidence">
+94
+</span>%
 
-</p>
-
-
-<p>
-Risk:
-0.75%
-
-</p>
-
-
-<p>
-Trades Today:
-0
-
-</p>
+</div>
 
 
 </div>
@@ -125,20 +106,91 @@ ACCOUNT PERFORMANCE
 
 
 <p>
-Win Rate:
-0%
+Trades Today:
+
+<span id="trades">
+0
+</span>
 
 </p>
 
 
 <p>
 Profit:
+
+<span id="profit">
 0
+</span>
 
 </p>
 
 
 </div>
+
+
+
+<div class="card">
+
+<div class="header">
+NOVA BRAIN ANALYSIS
+</div>
+
+
+<ul>
+
+<li>
+Trend: Bullish
+</li>
+
+
+<li>
+Momentum: Strong
+</li>
+
+
+<li>
+Risk: Acceptable
+</li>
+
+
+<li>
+Setup Match: 78%
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+
+<div class="card">
+
+<div class="header">
+MARKET RADAR
+</div>
+
+
+<p>
+EURUSD 🟢
+</p>
+
+
+<p>
+GBPUSD 🟡
+</p>
+
+
+<p>
+XAUUSD 🔴
+</p>
+
+
+</div>
+
+
+<script src="/static/dashboard.js"></script>
 
 
 
