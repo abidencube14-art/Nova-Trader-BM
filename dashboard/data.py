@@ -8,26 +8,83 @@ Nova-Trader-BM
 
 class DashboardData:
 
+
     def get_status(self):
+
 
         return {
 
-            "bot": "ONLINE",
 
-            "mt5": "DISCONNECTED",
+            "bot":
+            "ONLINE",
 
-            "brain": "ACTIVE",
 
-            "learning": "ACTIVE",
+            "mt5":
+            "CONNECTING",
 
-            "confidence": 94,
 
-            "risk": "0.75%",
+            "brain":
+            "ACTIVE",
 
-            "trades_today": 0,
 
-            "win_rate": 0,
+            "learning":
+            "ACTIVE",
 
-            "profit": 0
+
+            "confidence":
+            94,
+
+
+            "risk":
+            "0.75%",
+
+
+            "trades_today":
+            7,
+
+
+            "win_rate":
+            82,
+
+
+            "profit":
+            "£43.50",
+
+
+            "market":
+
+            [
+
+                {
+                    "symbol":"EURUSD",
+                    "status":"BULLISH"
+                },
+
+                {
+                    "symbol":"GBPUSD",
+                    "status":"WAITING"
+                },
+
+                {
+                    "symbol":"XAUUSD",
+                    "status":"VOLATILE"
+                }
+
+            ],
+
+
+            "analysis":
+
+            [
+
+                "Trend: Bullish",
+
+                "Momentum: Strong",
+
+                "Risk: Acceptable",
+
+                "Setup Match: 78%"
+
+            ]
 
         }
