@@ -18,12 +18,28 @@ class BrokerFactory:
 
             return SimulatorAdapter()
 
-        if name == "MT5":
+        elif name == "MT5":
 
             return MT5Adapter()
 
+        elif name == "MT4":
+
+            raise NotImplementedError(
+
+                "MT4 adapter coming soon."
+
+            )
+
+        elif name == "CTRADER":
+
+            raise NotImplementedError(
+
+                "cTrader adapter coming soon."
+
+            )
+
         raise ValueError(
 
-            "Unsupported broker"
+            "Unsupported platform."
 
         )
