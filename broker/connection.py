@@ -1,28 +1,33 @@
 """
 ==========================================
-MT5 Connection
+Broker Connection
 Nova-Trader-BM
 ==========================================
 """
 
-class MT5Connection:
+from broker.factory import BrokerFactory
 
-    def __init__(self):
 
-        self.connected = False
+class BrokerConnection:
+
+    def __init__(
+
+        self,
+
+        broker="SIMULATOR"
+
+    ):
+
+        self.adapter = BrokerFactory.create(
+
+            broker
+
+        )
 
     def connect(self):
 
-        print("Connecting to MT5...")
-
-        self.connected = True
-
-        return self.connected
+        return self.adapter.connect()
 
     def disconnect(self):
 
-        self.connected = False
-
-    def status(self):
-
-        return self.connected
+        return self.adapter.disconnect()
