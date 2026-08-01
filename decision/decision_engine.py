@@ -5,69 +5,54 @@ Nova-Trader-BM
 ==========================================
 """
 
-from decision.scoring import DecisionScore
-
-from decision.confidence import Confidence
+from signals.engine import SignalEngine
+from risk.engine import RiskEngine
 
 
 class DecisionEngine:
 
-    def evaluate(
+    def __init__(self):
+
+        self.signal_engine = SignalEngine()
+
+        self.risk_engine = RiskEngine()
+
+    def decide(
 
         self,
 
-        trend,
-
         indicators,
 
-        candle,
+        balance,
 
-        support,
+        entry,
 
-        resistance,
-
-        volatility
+        atr
 
     ):
 
-        score = DecisionScore()
+        signal = self.signal_engine.generate(
 
-        if trend != "SIDEWAYS":
+            indicators
 
-            score.add("Trend", 25)
+        )
 
-        if indicators["rsi"] > 55 or indicators["rsi"] < 45:
+        risk = self.risk_engine.evaluate(
 
-            score.add("Momentum", 20)
+            signal,
 
-        if candle:
+            balance,
 
-            score.add("Candlestick", 20)
+            entry,
 
-        if support:
+            atr
 
-            score.add("Support", 15)
-
-        if resistance:
-
-            score.add("Resistance", 10)
-
-        if volatility:
-
-            score.add("Volatility", 10)
-
-        confidence = Confidence()
+        )
 
         return {
 
-            "score": score.total(),
+            "signal": signal,
 
-            "confidence":
-
-            confidence.level(score.total()),
-
-            "details":
-
-            score.report()
+            "risk": risk
 
         }
