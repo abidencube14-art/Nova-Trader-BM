@@ -15,6 +15,8 @@ class IndicatorManager:
 
     def analyse(self, data):
 
+        ema50 = calculate_ema(data, 20)
+        
         ema50 = calculate_ema(data, 50)
 
         ema200 = calculate_ema(data, 200)
@@ -26,6 +28,8 @@ class IndicatorManager:
         macd, signal, histogram = calculate_macd(data)
 
         return {
+
+            "ema20": ema20.iloc[-1],
 
             "ema50": ema50.iloc[-1],
 
