@@ -77,7 +77,9 @@ class NovaBrain:
 
         return {
 
-            "decision": trend,
+            "decision": decision["action"],
+
+            "trend": trend,
 
             "score": decision["score"],
 
