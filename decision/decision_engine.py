@@ -17,17 +17,27 @@ class DecisionEngine:
 
         self.risk_engine = RiskEngine()
 
-    def decide(
+    def evaluate(
 
         self,
 
+        trend,
+
         indicators,
 
-        balance,
+        candle,
 
-        entry,
+        support,
 
-        atr
+        resistance,
+
+        volatility,
+
+        balance=10000,
+
+        entry=0,
+
+        atr=0
 
     ):
 
@@ -51,7 +61,11 @@ class DecisionEngine:
 
         return {
 
-            "signal": signal,
+            "action": signal.action,
+
+            "score": signal.confidence,
+
+            "confidence": signal.confidence,
 
             "risk": risk
 
