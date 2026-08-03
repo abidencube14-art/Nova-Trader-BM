@@ -10,6 +10,8 @@ from brain.reasoning import Reasoning
 
 from decision.decision_engine import DecisionEngine
 
+from models.trading_decision import TradingDecision
+
 
 class NovaBrain:
 
@@ -75,20 +77,18 @@ class NovaBrain:
 
         )
 
-        return {
+        return TradingDecision(
 
-            "decision": decision["action"],
+    action=decision["action"],
 
-            "trend": trend,
+    trend=trend,
 
-            "score": decision["score"],
+    confidence=decision["confidence"],
 
-            "confidence":
+    score=decision["score"],
 
-            decision["confidence"],
+    reason=explanation,
 
-            "reason":
+    risk=decision["risk"]
 
-            explanation
-
-        }
+        )
