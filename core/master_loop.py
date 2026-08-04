@@ -9,7 +9,7 @@ from market_data.candles import CandleFeed
 from indicators.manager import IndicatorManager
 from brain.brain import NovaBrain
 from simulator.engine import SimulatorEngine
-
+from analysis.engine import AnalysisEngine
 
 class MasterTradingLoop:
 
@@ -67,20 +67,27 @@ class MasterTradingLoop:
 
         latest = candles.iloc[-1]
 
-        decision = self.brain.think(
+        market = self.analysis.analyse(
 
-            trend="UNKNOWN",
+    candles,
 
-            indicators=analysis,
+    analysis
 
-            candle=latest,
+)
 
-            support=None,
+decision = self.brain.think(
 
-            resistance=None,
+    trend=market["trend"],
 
-            volatility=analysis["atr"]
+    indicators=analysis,
 
-        )
+    candle=latest,
 
+    support=market["support"],
+
+    resistance=market["resistance"],
+
+    volatility=market["volatility"]
+
+)
         print(decision)
