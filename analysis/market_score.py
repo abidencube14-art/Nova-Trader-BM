@@ -22,12 +22,12 @@ class MarketScore:
 
         score = 0
 
-        if trend == "BUY":
-
+        if trend == "BULLISH":
+            
             score += 40
 
-        elif trend == "SELL":
-
+        elif trend == "BEARISH":
+            
             score += 40
 
         if indicators["rsi"] > 55:
