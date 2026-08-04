@@ -8,7 +8,8 @@ Nova-Trader-BM
 from analysis.trend import TrendAnalysis
 from analysis.support_resistance import SupportResistance
 from analysis.volatility import VolatilityAnalysis
-
+from analysis.market_structure import MarketStructure
+from analysis.trend_strength import TrendStrength
 
 class AnalysisEngine:
 
@@ -22,24 +23,40 @@ class AnalysisEngine:
 
     def analyse(self, candles, indicators):
 
-        trend = self.trend.detect(indicators)
+    trend = self.trend.detect(indicators)
 
-        support, resistance = self.sr.calculate(candles)
+    support, resistance = self.sr.calculate(candles)
 
-        volatility = self.volatility.classify(
+    volatility = self.volatility.classify(
 
-            indicators["atr"]
+        indicators["atr"]
 
-        )
+    )
 
-        return {
+    structure = self.structure.trend(
 
-            "trend": trend,
+        candles
 
-            "support": support,
+    )
 
-            "resistance": resistance,
+    strength = self.strength.calculate(
 
-            "volatility": volatility
+        indicators
 
-        }
+    )
+
+    return {
+
+        "trend": trend,
+
+        "structure": structure,
+
+        "strength": strength,
+
+        "support": support,
+
+        "resistance": resistance,
+
+        "volatility": volatility
+
+    }
