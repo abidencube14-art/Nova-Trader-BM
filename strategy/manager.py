@@ -22,8 +22,21 @@ class StrategyManager:
 
         values = self.indicators.analyse(data)
 
-        return entry_signal(values)
+market = self.analysis.analyse(
 
+    data,
+
+    values
+
+)
+
+return entry_signal(
+
+    values,
+
+    market
+
+)
     def current_strategy(self):
 
         return self.name
