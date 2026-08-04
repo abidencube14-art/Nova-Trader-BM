@@ -8,31 +8,41 @@ Nova-Trader-BM
 from strategy.trend import detect_trend
 
 
-def entry_signal(indicators):
+def entry_signal(
+
+    indicators,
+
+    market
+
+)::
 
     trend = detect_trend(indicators)
 
     if (
 
-        trend == "BUY"
+    trend == "BUY"
 
-        and indicators["rsi"] > 55
+    and market["structure"] == "UPTREND"
 
-        and indicators["macd"] > indicators["signal"]
+    and indicators["rsi"] > 55
 
-    ):
+    and indicators["macd"] > indicators["signal"]
+
+):
 
         return "BUY"
 
     if (
 
-        trend == "SELL"
+    trend == "SELL"
 
-        and indicators["rsi"] < 45
+    and market["structure"] == "DOWNTREND"
 
-        and indicators["macd"] < indicators["signal"]
+    and indicators["rsi"] < 45
 
-    ):
+    and indicators["macd"] < indicators["signal"]
+
+):
 
         return "SELL"
 
