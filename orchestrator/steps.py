@@ -10,17 +10,41 @@ class PipelineSteps:
     @staticmethod
     def market(context):
 
-        return context
+    candles = context["candles"]
+
+    context["market_data"] = candles
+
+    return context
 
     @staticmethod
     def indicators(context):
 
-        return context
+    from indicators.manager import IndicatorManager
 
+    manager = IndicatorManager()
+
+    context["indicators"] = manager.analyse(
+
+        context["market_data"]
+
+    )
+
+    return context
+    
     @staticmethod
-    def strategy(context):
+def strategy(context):
 
-        return context
+    from strategy.manager import StrategyManager
+
+    strategy = StrategyManager()
+
+    context["signal"] = strategy.analyse(
+
+        context["market_data"]
+
+    )
+
+    return context
 
     @staticmethod
     def brain(context):
