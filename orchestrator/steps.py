@@ -86,7 +86,7 @@ def risk(context):
 
     context["risk"] = engine.evaluate(
 
-        context["decision"]["action"],
+        context["decision"].action,
 
         balance=10000,
 
