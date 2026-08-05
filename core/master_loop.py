@@ -19,6 +19,8 @@ class MasterTradingLoop:
 
         self.indicators = IndicatorManager()
 
+        self.analysis = AnalysisEngine()
+
         self.brain = NovaBrain()
 
         self.simulator = SimulatorEngine()
@@ -77,6 +79,18 @@ class MasterTradingLoop:
 
 decision = self.brain.think(
 
+    trade = self.simulator.execute(
+
+    symbol=symbol,
+
+    decision=decision,
+
+    risk=decision.risk,
+
+    entry=latest["close"]
+
+    )
+
     trend=market["trend"],
 
     indicators=analysis,
@@ -90,4 +104,14 @@ decision = self.brain.think(
     volatility=market["volatility"]
 
 )
-        print(decision)
+        print()
+
+print("========== TRADE DECISION ==========")
+
+print(decision)
+
+print()
+
+print("========== EXECUTION ==========")
+
+print(trade)
