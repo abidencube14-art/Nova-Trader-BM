@@ -28,19 +28,19 @@ class RiskEngine:
 
     def evaluate(
 
-        self,
+    self,
 
-        signal,
+    decision,
 
-        balance,
+    balance,
 
-        entry,
+    entry,
 
-        atr
+    atr
 
-    ):
+):
 
-        if not self.filters.allow(signal):
+        if not self.filters.allow(decision):
 
             return None
 
