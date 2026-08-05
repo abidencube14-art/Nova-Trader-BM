@@ -79,18 +79,6 @@ class MasterTradingLoop:
 
 decision = self.brain.think(
 
-    trade = self.simulator.execute(
-
-    symbol=symbol,
-
-    decision=decision,
-
-    risk=decision.risk,
-
-    entry=latest["close"]
-
-    )
-
     trend=market["trend"],
 
     indicators=analysis,
@@ -104,14 +92,45 @@ decision = self.brain.think(
     volatility=market["volatility"]
 
 )
-        print()
 
-print("========== TRADE DECISION ==========")
+trade = self.simulator.execute(
 
-print(decision)
+    symbol=symbol,
+
+    decision=decision,
+
+    risk=decision.risk,
+
+    entry=latest["close"]
+
+)
 
 print()
 
-print("========== EXECUTION ==========")
+print("===================================")
 
-print(trade)
+print("NOVA TRADER BM")
+
+print("===================================")
+
+print(f"Symbol      : {symbol}")
+
+print(f"Trend       : {decision.trend}")
+
+print(f"Action      : {decision.action}")
+
+print(f"Confidence  : {decision.confidence}%")
+
+print(f"Reason      : {decision.reason}")
+
+print()
+
+if trade:
+
+    print("Trade Executed Successfully")
+
+    print(trade)
+
+else:
+
+    print("No Trade Executed")
