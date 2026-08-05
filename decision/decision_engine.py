@@ -47,6 +47,8 @@ class DecisionEngine:
 
         )
 
+        atr = indicators["atr"]
+
         risk = self.risk_engine.evaluate(
 
             signal,
@@ -61,12 +63,14 @@ class DecisionEngine:
 
         return {
 
-            "action": signal.action,
+                "action": signal.action,
 
-            "score": signal.confidence,
+                "score": signal.confidence,
 
-            "confidence": signal.confidence,
+                "confidence": signal.confidence,
 
-            "risk": risk
-
-        }
+                "reason": signal.reason,
+            
+                "risk": risk
+            
+             }
