@@ -22,7 +22,11 @@ class TradingPipeline:
 
     def run(self, context):
 
-        for step in self.steps:
+    from logs.errors import ErrorHandler
+
+    for step in self.steps:
+
+        try:
 
             self.logger.info(
 
@@ -32,10 +36,10 @@ class TradingPipeline:
 
             context = step(context)
 
-        self.logger.info(
+        except Exception as e:
 
-            "Pipeline completed successfully."
+            ErrorHandler.handle(e)
 
-        )
+            break
 
-        return context
+    return context
