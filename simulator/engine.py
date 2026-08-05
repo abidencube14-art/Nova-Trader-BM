@@ -38,6 +38,10 @@ class SimulatorEngine:
 
             return None
 
+        if risk is None:
+
+            return None
+
         trade = self.execution.open_trade(
 
             symbol,
