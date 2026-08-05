@@ -8,16 +8,14 @@ Nova-Trader-BM
 class PipelineSteps:
 
     @staticmethod
-    def market(context):
+def market(context):
 
-    candles = context["candles"]
-
-    context["market_data"] = candles
+    context["market_data"] = context["candles"]
 
     return context
 
     @staticmethod
-    def indicators(context):
+def indicators(context):
 
     from indicators.manager import IndicatorManager
 
@@ -34,13 +32,15 @@ class PipelineSteps:
     @staticmethod
 def strategy(context):
 
-    from strategy.manager import StrategyManager
+    from analysis.engine import AnalysisEngine
 
-    strategy = StrategyManager()
+    analysis = AnalysisEngine()
 
-    context["signal"] = strategy.analyse(
+    context["market"] = analysis.analyse(
 
-        context["market_data"]
+        context["market_data"],
+
+        context["indicators"]
 
     )
 
@@ -53,21 +53,21 @@ def brain(context):
 
     brain = NovaBrain()
 
-    market = context.get("market", {})
+    market = context["market"]
 
     context["decision"] = brain.think(
 
-        trend=market.get("trend", "SIDEWAYS"),
+        trend=market["trend"],
 
         indicators=context["indicators"],
 
         candle=context["market_data"].iloc[-1],
 
-        support=market.get("support"),
+        support=market["support"],
 
-        resistance=market.get("resistance"),
+        resistance=market["resistance"],
 
-        volatility=market.get("volatility", "NORMAL")
+        volatility=market["volatility"]
 
     )
 
@@ -76,25 +76,7 @@ def brain(context):
     @staticmethod
 def risk(context):
 
-    from risk.engine import RiskEngine
-
-    engine = RiskEngine()
-
-    atr = context["indicators"]["atr"]
-
-    entry = context["market_data"].iloc[-1]["close"]
-
-    context["risk"] = engine.evaluate(
-
-        context["decision"].action,
-
-        balance=10000,
-
-        entry=entry,
-
-        atr=atr
-
-    )
+    context["risk"] = context["decision"].risk
 
     return context
 
@@ -107,7 +89,7 @@ def execution(context):
 
     entry = context["market_data"].iloc[-1]["close"]
 
-    trade = simulator.execute(
+    context["trade"] = simulator.execute(
 
         symbol="EURUSD",
 
@@ -119,15 +101,19 @@ def execution(context):
 
     )
 
-    context["trade"] = trade
-
     return context
 
     @staticmethod
 def learning(context):
 
-    if context.get("trade"):
+    if context["trade"] is not None:
 
-        print("Learning from completed trade...")
+        print(
+
+            "Learning from",
+
+            context["trade"].symbol
+
+        )
 
     return context
