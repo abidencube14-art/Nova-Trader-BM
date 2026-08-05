@@ -47,21 +47,87 @@ def strategy(context):
     return context
 
     @staticmethod
-    def brain(context):
+def brain(context):
 
-        return context
+    from brain.brain import NovaBrain
+
+    brain = NovaBrain()
+
+    market = context.get("market", {})
+
+    context["decision"] = brain.think(
+
+        trend=market.get("trend", "SIDEWAYS"),
+
+        indicators=context["indicators"],
+
+        candle=context["market_data"].iloc[-1],
+
+        support=market.get("support"),
+
+        resistance=market.get("resistance"),
+
+        volatility=market.get("volatility", "NORMAL")
+
+    )
+
+    return context
 
     @staticmethod
-    def risk(context):
+def risk(context):
 
-        return context
+    from risk.engine import RiskEngine
+
+    engine = RiskEngine()
+
+    atr = context["indicators"]["atr"]
+
+    entry = context["market_data"].iloc[-1]["close"]
+
+    context["risk"] = engine.evaluate(
+
+        context["decision"]["action"],
+
+        balance=10000,
+
+        entry=entry,
+
+        atr=atr
+
+    )
+
+    return context
 
     @staticmethod
-    def execution(context):
+def execution(context):
 
-        return context
+    from simulator.engine import SimulatorEngine
+
+    simulator = SimulatorEngine()
+
+    entry = context["market_data"].iloc[-1]["close"]
+
+    trade = simulator.execute(
+
+        symbol="EURUSD",
+
+        decision=context["decision"],
+
+        risk=context["risk"],
+
+        entry=entry
+
+    )
+
+    context["trade"] = trade
+
+    return context
 
     @staticmethod
-    def learning(context):
+def learning(context):
 
-        return context
+    if context.get("trade"):
+
+        print("Learning from completed trade...")
+
+    return context
