@@ -8,12 +8,10 @@ Nova-Trader-BM
 
 class RiskFilters:
 
-    def allow(
+    def allow(self, signal):
 
-        self,
+        if signal is None:
 
-        signal
-
-    ):
+            return False
 
         return signal.confidence >= 70
