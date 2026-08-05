@@ -23,4 +23,4 @@ jobs:
 
     - name: Run Nova Trader
       run: |
-        python core/main.py
+        python -m core.main
