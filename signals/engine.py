@@ -5,51 +5,40 @@ Nova-Trader-BM
 ==========================================
 """
 
-from signals.rules import TradingRules
-
-from signals.confidence import ConfidenceCalculator
-
-from signals.signal import TradingSignal
+from strategy.manager import StrategyManager
+from strategy.filters import trade_allowed
 
 
 class SignalEngine:
 
     def __init__(self):
 
-        self.rules = TradingRules()
+        self.strategy = StrategyManager()
 
-        self.confidence = ConfidenceCalculator()
+    def generate(self, data):
 
-    def generate(self, indicators):
+        indicators = self.strategy.indicators.analyse(data)
 
-        score, reasons = self.rules.evaluate(indicators)
+        market = self.strategy.analysis.analyse(
 
-        confidence = self.confidence.calculate(
+            data,
 
-            score,
-
-            4
+            indicators
 
         )
 
-        if confidence >= 75:
+        action = self.strategy.analyse(data)
 
-            action = "BUY"
-
-        elif confidence <= 25:
-
-            action = "SELL"
-
-        else:
+        if not trade_allowed(indicators):
 
             action = "WAIT"
 
-        return TradingSignal(
+        return {
 
-            action=action,
+            "action": action,
 
-            confidence=confidence,
+            "market": market,
 
-            reason=", ".join(reasons)
+            "indicators": indicators
 
-        )
+        }
