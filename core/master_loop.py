@@ -67,70 +67,70 @@ class MasterTradingLoop:
 
         )
 
-        latest = candles.iloc[-1]
+                latest = candles.iloc[-1]
 
         market = self.analysis.analyse(
 
-    candles,
+            candles,
 
-    analysis
+            analysis
 
-)
+        )
 
-decision = self.brain.think(
+        decision = self.brain.think(
 
-    trend=market["trend"],
+            trend=market["trend"],
 
-    indicators=analysis,
+            indicators=analysis,
 
-    candle=latest,
+            candle=latest,
 
-    support=market["support"],
+            support=market["support"],
 
-    resistance=market["resistance"],
+            resistance=market["resistance"],
 
-    volatility=market["volatility"]
+            volatility=market["volatility"]
 
-)
+        )
 
-trade = self.simulator.execute(
+        trade = self.simulator.execute(
 
-    symbol=symbol,
+            symbol=symbol,
 
-    decision=decision,
+            decision=decision,
 
-    risk=decision.risk,
+            risk=decision.risk,
 
-    entry=latest["close"]
+            entry=latest["close"]
 
-)
+        )
 
-print()
+        print()
 
-print("===================================")
+        print("===================================")
 
-print("NOVA TRADER BM")
+        print("NOVA TRADER BM")
 
-print("===================================")
+        print("===================================")
 
-print(f"Symbol      : {symbol}")
+        print(f"Symbol      : {symbol}")
 
-print(f"Trend       : {decision.trend}")
+        print(f"Trend       : {decision.trend}")
 
-print(f"Action      : {decision.action}")
+        print(f"Action      : {decision.action}")
 
-print(f"Confidence  : {decision.confidence}%")
+        print(f"Confidence  : {decision.confidence}%")
 
-print(f"Reason      : {decision.reason}")
+        print(f"Reason      : {decision.reason}")
 
-print()
+        print()
 
-if trade:
+        if trade:
 
-    print("Trade Executed Successfully")
+            print("Trade Executed Successfully")
 
-    print(trade)
+            print(trade)
 
-else:
+        else:
 
-    print("No Trade Executed")
+            print("No Trade Executed")
