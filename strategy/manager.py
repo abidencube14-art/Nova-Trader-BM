@@ -9,6 +9,7 @@ from indicators.manager import IndicatorManager
 
 from strategy.entries import entry_signal
 
+from analysis.engine import AnalysisEngine
 
 class StrategyManager:
 
@@ -17,6 +18,8 @@ class StrategyManager:
         self.indicators = IndicatorManager()
 
         self.name = "EMA-RSI-MACD"
+
+        self.analysis = AnalysisEngine()
 
     def analyse(self, data):
 
