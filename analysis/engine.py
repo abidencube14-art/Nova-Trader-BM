@@ -32,35 +32,22 @@ class AnalysisEngine:
     support, resistance = self.sr.calculate(candles)
 
     volatility = self.volatility.classify(
-
         indicators["atr"]
-
     )
 
     structure = self.structure.trend(
-
         candles
-
     )
 
     strength = self.strength.calculate(
-
         indicators
-
     )
 
     return {
-
         "trend": trend,
-
         "structure": structure,
-
         "strength": strength,
-
         "support": support,
-
         "resistance": resistance,
-
         "volatility": volatility
-
     }
