@@ -6,8 +6,14 @@ Nova-Trader-BM
 """
 
 
-class Volatility:
+class VolatilityAnalysis:
 
-    def normal(self, atr):
+    def classify(self, atr):
 
-        return atr > 0
+        if atr <= 0:
+            return "LOW"
+
+        elif atr < 0.001:
+            return "NORMAL"
+
+        return "HIGH"
