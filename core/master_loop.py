@@ -25,112 +25,58 @@ class MasterTradingLoop:
 
         self.simulator = SimulatorEngine()
 
-    def run(
+    def run(self, symbol, timeframe):
 
-        self,
+    print(f"Starting trading loop for {symbol}")
 
+    candles = self.market.latest(
         symbol,
+        timeframe,
+        200
+    )
 
-        timeframe
+    if candles is None or len(candles) == 0:
+        print("No candle data.")
+        return
 
-    ):
+    analysis = self.indicators.analyse(candles)
 
-        print(
+    latest = candles.iloc[-1]
 
-            f"Starting trading loop for {symbol}"
+    market = self.analysis.analyse(
+        candles,
+        analysis
+    )
 
-        )
+    decision = self.brain.think(
+        trend=market["trend"],
+        indicators=analysis,
+        candle=latest,
+        support=market["support"],
+        resistance=market["resistance"],
+        volatility=market["volatility"]
+    )
 
-        candles = self.market.latest(
+    trade = self.simulator.execute(
+        symbol=symbol,
+        decision=decision,
+        risk=decision.risk,
+        entry=latest["close"]
+    )
 
-            symbol,
+    print()
+    print("===================================")
+    print("NOVA TRADER BM")
+    print("===================================")
+    print(f"Symbol      : {symbol}")
+    print(f"Trend       : {decision.trend}")
+    print(f"Action      : {decision.action}")
+    print(f"Confidence  : {decision.confidence}%")
+    print(f"Reason      : {decision.reason}")
+    print()
 
-            timeframe,
-
-            200
-
-        )
-
-        if candles is None or len(candles) == 0:
-
-            print(
-
-                "No candle data."
-
-            )
-
-            return
-
-        analysis = self.indicators.analyse(
-
-            candles
-
-        )
-
-                latest = candles.iloc[-1]
-
-        market = self.analysis.analyse(
-
-            candles,
-
-            analysis
-
-        )
-
-        decision = self.brain.think(
-
-            trend=market["trend"],
-
-            indicators=analysis,
-
-            candle=latest,
-
-            support=market["support"],
-
-            resistance=market["resistance"],
-
-            volatility=market["volatility"]
-
-        )
-
-        trade = self.simulator.execute(
-
-            symbol=symbol,
-
-            decision=decision,
-
-            risk=decision.risk,
-
-            entry=latest["close"]
-
-        )
-
-        print()
-
-        print("===================================")
-
-        print("NOVA TRADER BM")
-
-        print("===================================")
-
-        print(f"Symbol      : {symbol}")
-
-        print(f"Trend       : {decision.trend}")
-
-        print(f"Action      : {decision.action}")
-
-        print(f"Confidence  : {decision.confidence}%")
-
-        print(f"Reason      : {decision.reason}")
-
-        print()
-
-        if trade:
-
-            print("Trade Executed Successfully")
-
-            print(trade)
-
-        else:
-
-            print("No Trade Executed")
+    if trade:
+        print("Trade Executed Successfully")
+        print(trade)
+    else:
+        print("No Trade Executed")
