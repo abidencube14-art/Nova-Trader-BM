@@ -21,6 +21,10 @@ class AnalysisEngine:
 
         self.volatility = VolatilityAnalysis()
 
+        self.structure = MarketStructure()
+
+        self.strength = TrendStrength()
+
     def analyse(self, candles, indicators):
 
     trend = self.trend.detect(indicators)
