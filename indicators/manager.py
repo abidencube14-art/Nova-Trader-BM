@@ -15,7 +15,7 @@ class IndicatorManager:
 
     def analyse(self, data):
 
-        ema50 = calculate_ema(data, 20)
+        ema20 = calculate_ema(data, 20)
         
         ema50 = calculate_ema(data, 50)
 
