@@ -67,8 +67,6 @@ class MasterTradingLoop:
 
             entry=latest["close"],
 
-            atr=analysis["atr"]
-
         )
 
         trade = self.simulator.execute(
