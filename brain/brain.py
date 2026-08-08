@@ -37,58 +37,66 @@ class NovaBrain:
 
         resistance,
 
-        volatility
+        volatility,
+
+        entry=0,
+
+        atr=0
 
     ):
 
-        decision = self.engine.evaluate(
+    decision = self.engine.evaluate(
 
-            trend,
+        trend,
 
-            indicators,
+        indicators,
 
-            candle,
+        candle,
 
-            support,
+        support,
 
-            resistance,
+        resistance,
 
-            volatility
+        volatility,
 
-        )
+        entry,
 
-        self.memory.update(
+        atr
 
-            trend,
+    )
 
-            decision["score"],
+    self.memory.update(
 
-            decision["confidence"]
+        trend,
 
-        )
+        decision["score"],
 
-        explanation = self.reason.explain(
+        decision["confidence"]
 
-            trend,
+    )
 
-            indicators,
+    explanation = self.reason.explain(
 
-            decision["confidence"]
+        trend,
 
-        )
+        indicators,
 
-        return TradingDecision(
+        decision["confidence"]
 
-    action=decision["action"],
+    )
 
-    trend=trend,
+    return TradingDecision(
 
-    confidence=decision["confidence"],
+        action=decision["action"],
 
-    score=decision["score"],
+        trend=trend,
 
-    reason=explanation,
+        confidence=decision["confidence"],
 
-    risk=decision["risk"]
+        score=decision["score"],
 
-        )
+        reason=explanation,
+
+        risk=decision["risk"]
+
+    )
