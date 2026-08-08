@@ -22,6 +22,18 @@ class PositionSizer:
 
     ):
 
+        if balance <= 0:
+
+            return 0.0
+
+        if stop_loss_pips <= 0:
+
+            return 0.0
+
+        if pip_value <= 0:
+
+            return 0.0
+
         risk_amount = balance * (
 
             risk_percent / 100
@@ -34,4 +46,4 @@ class PositionSizer:
 
         )
 
-        return round(lot, 2)
+        return round(lot, 5)
