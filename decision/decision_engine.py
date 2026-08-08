@@ -33,11 +33,9 @@ class DecisionEngine:
 
         volatility,
 
-        balance=10000,
+        balance=10,
 
-        entry=0,
-
-        atr=0
+        entry=0
 
     ):
 
@@ -51,26 +49,26 @@ class DecisionEngine:
 
         risk = self.risk_engine.evaluate(
 
-            signal,
+            signal=signal,
 
-            balance,
+            balance=balance,
 
-            entry,
+            entry=entry,
 
-            atr
+            atr=atr
 
         )
 
         return {
 
-                "action": signal.action,
+            "action": signal.action,
 
-                "score": signal.confidence,
+            "score": signal.confidence,
 
-                "confidence": signal.confidence,
+            "confidence": signal.confidence,
 
-                "reason": signal.reason,
-            
-                "risk": risk
-            
-             }
+            "reason": signal.reason,
+
+            "risk": risk
+
+        }
