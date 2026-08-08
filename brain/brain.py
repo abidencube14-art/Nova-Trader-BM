@@ -39,9 +39,7 @@ class NovaBrain:
 
         volatility,
 
-        entry=0,
-
-        atr=0
+        entry=0
 
     ):
 
@@ -59,9 +57,7 @@ class NovaBrain:
 
             volatility,
 
-            entry=entry,
-
-            atr=atr
+            entry=entry
 
         )
 
