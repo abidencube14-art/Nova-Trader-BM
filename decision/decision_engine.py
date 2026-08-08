@@ -49,7 +49,7 @@ class DecisionEngine:
 
         risk = self.risk_engine.evaluate(
 
-            signal=signal,
+            decision=signal,
 
             balance=balance,
 
