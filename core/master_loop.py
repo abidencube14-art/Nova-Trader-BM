@@ -52,12 +52,23 @@ class MasterTradingLoop:
         )
 
         decision = self.brain.think(
+
             trend=market["trend"],
+
             indicators=analysis,
+
             candle=latest,
+
             support=market["support"],
+
             resistance=market["resistance"],
-            volatility=market["volatility"]
+
+            volatility=market["volatility"],
+
+            entry=latest["close"],
+
+            atr=analysis["atr"]
+
         )
 
         trade = self.simulator.execute(
