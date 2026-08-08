@@ -8,7 +8,7 @@ Nova-Trader-BM
 
 class SimulatorAccount:
 
-    def __init__(self, balance=10000):
+    def __init__(self, balance=10):
 
         self.balance = balance
 
