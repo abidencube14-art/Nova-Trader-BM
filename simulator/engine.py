@@ -61,3 +61,105 @@ class SimulatorEngine:
         self.history.add(trade)
 
         return trade
+
+    def check_exit(
+
+        self,
+
+        trade,
+
+        high,
+
+        low
+
+    ):
+
+        if trade is None:
+
+            return None
+
+        if trade.status == "CLOSED":
+
+            return trade
+
+        exit_price = None
+
+        close_reason = None
+
+        if trade.action == "BUY":
+
+            if low <= trade.sl:
+
+                exit_price = trade.sl
+
+                close_reason = "STOP_LOSS"
+
+            elif high >= trade.tp:
+
+                exit_price = trade.tp
+
+                close_reason = "TAKE_PROFIT"
+
+        elif trade.action == "SELL":
+
+            if high >= trade.sl:
+
+                exit_price = trade.sl
+
+                close_reason = "STOP_LOSS"
+
+            elif low <= trade.tp:
+
+                exit_price = trade.tp
+
+                close_reason = "TAKE_PROFIT"
+
+        if exit_price is None:
+
+            return trade
+
+        price_difference = (
+
+            exit_price - trade.entry
+
+        )
+
+        if trade.action == "SELL":
+
+            price_difference = (
+
+                trade.entry - exit_price
+
+            )
+
+        profit_loss = (
+
+            price_difference
+
+            * trade.lot
+
+            * 100000
+
+        )
+
+        trade.exit_price = exit_price
+
+        trade.profit_loss = round(
+
+            profit_loss,
+
+            2
+
+        )
+
+        trade.close_reason = close_reason
+
+        trade.status = "CLOSED"
+
+        self.account.deposit(
+
+            trade.profit_loss
+
+        )
+
+        return trade
