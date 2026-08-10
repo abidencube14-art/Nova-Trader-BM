@@ -133,69 +133,59 @@ class MasterTradingLoop:
 
             print()
 
+            print("===================================")
+
+            print("SIMULATOR PERFORMANCE")
+
+            print("===================================")
+
             print(
 
-                f"Simulator Balance : "
+                f"Total Trades     : "
+
+                f"{self.simulator.history.total_trades()}"
+
+            )
+
+            print(
+
+                f"Winning Trades   : "
+
+                f"{self.simulator.history.winning_trades()}"
+
+            )
+
+            print(
+
+                f"Losing Trades    : "
+
+                f"{self.simulator.history.losing_trades()}"
+
+            )
+
+            print(
+
+                f"Win Rate         : "
+
+                f"{self.simulator.history.win_rate()}%"
+
+            )
+
+            print(
+
+                f"Total P/L        : "
+
+                f"${self.simulator.history.total_profit_loss():.2f}"
+
+            )
+
+            print(
+
+                f"Balance          : "
 
                 f"${self.simulator.account.get_balance():.2f}"
 
             )
-            
-        print()
-
-        print("===================================")
-
-        print("SIMULATOR PERFORMANCE")
-
-        print("===================================")
-
-        print(
-
-            f"Total Trades     : "
-
-            f"{self.simulator.history.total_trades()}"
-
-        )
-
-        print(
-
-            f"Winning Trades   : "
-
-            f"{self.simulator.history.winning_trades()}"
-
-        )
-
-        print(
-
-            f"Losing Trades    : "
-
-            f"{self.simulator.history.losing_trades()}"
-
-        )
-
-        print(
-
-            f"Win Rate         : "
-
-            f"{self.simulator.history.win_rate()}%"
-
-        )
-
-        print(
-
-            f"Total P/L        : "
-
-            f"${self.simulator.history.total_profit_loss():.2f}"
-
-        )
-
-        print(
-
-            f"Balance          : "
-
-            f"${self.simulator.account.get_balance():.2f}"
-
-        )
 
         else:
 
