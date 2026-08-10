@@ -24,3 +24,6 @@ jobs:
     - name: Run Nova Trader
       run: |
         python -m core.main
+        
+    - name: Run Backtest
+      run: python -m backtesting.run_backtest
