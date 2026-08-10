@@ -5,38 +5,81 @@ Nova-Trader-BM
 ==========================================
 """
 
+
 class Report:
 
     def generate(
 
         self,
 
-        stats
+        simulator
 
     ):
 
+        history = simulator.history
+
+        account = simulator.account
+
+        print()
+
+        print("===================================")
+
+        print("NOVA BACKTEST REPORT")
+
+        print("===================================")
+
         print(
 
-            "=========="
+            f"Starting Balance : $10.00"
 
         )
 
         print(
 
-            "BACKTEST"
+            f"Ending Balance   : "
+
+            f"${account.get_balance():.2f}"
 
         )
 
         print(
 
-            "=========="
+            f"Total Trades     : "
+
+            f"{history.total_trades()}"
 
         )
 
-        for key, value in stats.items():
+        print(
 
-            print(
+            f"Winning Trades   : "
 
-                f"{key}: {value}"
+            f"{history.winning_trades()}"
 
-            )
+        )
+
+        print(
+
+            f"Losing Trades    : "
+
+            f"{history.losing_trades()}"
+
+        )
+
+        print(
+
+            f"Win Rate         : "
+
+            f"{history.win_rate()}%"
+
+        )
+
+        print(
+
+            f"Total P/L        : "
+
+            f"${history.total_profit_loss():.2f}"
+
+        )
+
+        print("===================================")
