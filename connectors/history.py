@@ -51,24 +51,84 @@ class HistoryConnector:
 
         for i in range(count):
 
+            # ----------------------------------
+            # Market regime
+            # ----------------------------------
+
+            if i < count * 0.25:
+
+                # Bullish phase
+                trend = 0.000015
+
+            elif i < count * 0.50:
+
+                # Sideways phase
+                trend = 0.0
+
+            elif i < count * 0.75:
+
+                # Bearish phase
+                trend = -0.000018
+
+            else:
+
+                # Recovery / bullish phase
+                trend = 0.000012
+
+            # ----------------------------------
+            # Market movement
+            # ----------------------------------
+
+            wave = math.sin(i / 7) * 0.00015
+
+            volatility = (
+
+                0.00008
+
+                + abs(math.sin(i / 11)) * 0.00007
+
+            )
+
             close = (
-                1.1000
-                + (i * 0.00002)
-                + (math.sin(i / 8) * 0.00015)
+
+                previous_close
+
+                + trend
+
+                + wave
+
             )
 
             open_price = previous_close
 
-            high = max(open_price, close) + 0.00008
+            high = (
 
-            low = min(open_price, close) - 0.00008
+                max(open_price, close)
+
+                + volatility
+
+            )
+
+            low = (
+
+                min(open_price, close)
+
+                - volatility
+
+            )
 
             rows.append({
+
                 "open": open_price,
+
                 "high": high,
+
                 "low": low,
+
                 "close": close,
+
                 "tick_volume": 100
+
             })
 
             previous_close = close
