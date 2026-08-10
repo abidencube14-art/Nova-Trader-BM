@@ -118,19 +118,31 @@ class SimulatorEngine:
 
             return trade
 
-        price_difference = (
+        trade = self.execution.close_trade(
 
-            exit_price - trade.entry
+            trade,
+
+            exit_price,
+
+            close_reason
 
         )
 
-        if trade.action == "SELL":
+        trade.profit_loss = round(
 
-            price_difference = (
+            trade.profit_loss * 100000,
 
-                trade.entry - exit_price
+            2
 
-            )
+        )
+
+        self.account.apply_profit_loss(
+
+            trade.profit_loss
+
+        )
+
+        return trade
 
         profit_loss = (
 
