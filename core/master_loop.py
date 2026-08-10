@@ -65,27 +65,62 @@ class MasterTradingLoop:
 
             volatility=market["volatility"],
 
-            entry=latest["close"],
+            entry=latest["close"]
 
         )
 
         trade = self.simulator.execute(
+
             symbol=symbol,
+
             decision=decision,
+
             risk=decision.risk,
+
             entry=latest["close"]
+
         )
+
+        if trade:
+
+            for i in range(len(candles)):
+
+                candle = candles.iloc[i]
+
+                if candle.name == latest.name:
+
+                    continue
+
+                trade = self.simulator.check_exit(
+
+                    trade,
+
+                    high=candle["high"],
+
+                    low=candle["low"]
+
+                )
+
+                if trade.status == "CLOSED":
+
+                    break
 
         print()
 
         print("===================================")
+
         print("NOVA TRADER BM")
+
         print("===================================")
 
         print(f"Symbol      : {symbol}")
+
         print(f"Trend       : {decision.trend}")
+
         print(f"Action      : {decision.action}")
+
         print(f"Confidence  : {decision.confidence}%")
+
         print(f"Reason      : {decision.reason}")
 
         print()
@@ -95,6 +130,16 @@ class MasterTradingLoop:
             print("Trade Executed Successfully")
 
             print(trade)
+
+            print()
+
+            print(
+
+                f"Simulator Balance : "
+
+                f"${self.simulator.account.get_balance():.2f}"
+
+            )
 
         else:
 
