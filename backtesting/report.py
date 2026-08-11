@@ -14,10 +14,6 @@ class Report:
 
         account = simulator.account
 
-        # ----------------------------------
-        # Statistics
-        # ----------------------------------
-
         total_trades = history.total_trades()
 
         closed_trades = len(
@@ -54,54 +50,85 @@ class Report:
 
         balance = account.get_balance()
 
-        # ----------------------------------
-        # Report
-        # ----------------------------------
-
         print()
 
         print("===================================")
-
         print("NOVA BACKTEST REPORT")
-
         print("===================================")
 
         print(
-            "Starting Balance : $10.00"
+            f"Starting Balance : $10.00"
         )
 
         print(
-            f"Ending Balance   : "
-            f"${balance:.2f}"
+            f"Ending Balance   : ${balance:.2f}"
         )
 
         print(
-            f"Total Trades Opened : "
-            f"{total_trades}"
+            f"Total Trades Opened : {total_trades}"
         )
 
         print(
-            f"Closed Trades       : "
-            f"{closed_trades}"
+            f"Closed Trades       : {closed_trades}"
         )
 
         print(
-            f"Open Trades         : "
-            f"{open_trades}"
+            f"Open Trades         : {open_trades}"
         )
 
         print(
-            f"Winning Trades      : "
-            f"{winning_trades}"
+            f"Winning Trades      : {winning_trades}"
         )
 
         print(
-            f"Losing Trades       : "
-            f"{losing_trades}"
+            f"Losing Trades       : {losing_trades}"
         )
 
         print(
-            f"Win Rate            : "
+            f"Win Rate            : {win_rate}%"
+        )
+
+        print()
+
+        print("-----------------------------------")
+        print("PROFITABILITY")
+        print("-----------------------------------")
+
+        print(
+            f"Gross Profit        : ${gross_profit:.5f}"
+        )
+
+        print(
+            f"Gross Loss          : ${gross_loss:.5f}"
+        )
+
+        print(
+            f"Average Win         : ${average_win:.5f}"
+        )
+
+        print(
+            f"Average Loss        : ${average_loss:.5f}"
+        )
+
+        print(
+            f"Largest Win         : ${largest_win:.5f}"
+        )
+
+        print(
+            f"Largest Loss        : ${largest_loss:.5f}"
+        )
+
+        print(
+            f"Profit Factor       : {profit_factor:.3f}"
+        )
+
+        print()
+
+        print(
+            f"Total P/L           : ${total_profit_loss:.2f}"
+        )
+
+        print("===================================")            
             f"{win_rate}%"
         )
 
