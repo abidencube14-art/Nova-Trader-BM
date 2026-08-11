@@ -20,7 +20,7 @@ class SignalEngine:
 
     def generate(self, indicators):
 
-        score, reasons = self.rules.evaluate(
+        score, direction, reasons = self.rules.evaluate(
             indicators
         )
 
@@ -29,37 +29,11 @@ class SignalEngine:
             4
         )
 
-        rsi = indicators["rsi"]
-
-        # ----------------------------------
-        # RSI safety filters
-        # ----------------------------------
-
-        if rsi > 70:
-
-            action = "WAIT"
-
-            confidence = 0
-
-            reasons.append(
-                "BUY blocked: RSI above 70"
-            )
-
-        elif rsi < 30:
-
-            action = "WAIT"
-
-            confidence = 0
-
-            reasons.append(
-                "SELL blocked: RSI below 30"
-            )
-
-        elif confidence >= 75:
+        if direction == "BUY" and confidence >= 75:
 
             action = "BUY"
 
-        elif confidence <= 25:
+        elif direction == "SELL" and confidence >= 75:
 
             action = "SELL"
 
