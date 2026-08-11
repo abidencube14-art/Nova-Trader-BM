@@ -20,6 +20,10 @@ class SimulatorEngine:
 
         self.history = TradeHistory()
 
+        # Commission charged per completed trade.
+        # Kept small for the $10 simulation account.
+        self.commission = 0.01
+
     def execute(
 
         self,
@@ -86,6 +90,10 @@ class SimulatorEngine:
 
         close_reason = None
 
+        # ----------------------------------
+        # BUY
+        # ----------------------------------
+
         if trade.action == "BUY":
 
             if low <= trade.sl:
@@ -99,6 +107,10 @@ class SimulatorEngine:
                 exit_price = trade.tp
 
                 close_reason = "TAKE_PROFIT"
+
+        # ----------------------------------
+        # SELL
+        # ----------------------------------
 
         elif trade.action == "SELL":
 
@@ -118,6 +130,10 @@ class SimulatorEngine:
 
             return trade
 
+        # ----------------------------------
+        # Close trade
+        # ----------------------------------
+
         trade = self.execution.close_trade(
 
             trade,
@@ -128,6 +144,8 @@ class SimulatorEngine:
 
         )
 
+        # Convert price movement into
+        # simulated monetary P/L.
         trade.profit_loss = round(
 
             trade.profit_loss * 100000,
@@ -136,39 +154,24 @@ class SimulatorEngine:
 
         )
 
-        self.account.apply_profit_loss(
-
-            trade.profit_loss
-
-        )
-
-        return trade
-
-        profit_loss = (
-
-            price_difference
-
-            * trade.lot
-
-            * 100000
-
-        )
-
-        trade.exit_price = exit_price
+        # ----------------------------------
+        # Commission
+        # ----------------------------------
 
         trade.profit_loss = round(
 
-            profit_loss,
+            trade.profit_loss
+            - self.commission,
 
             2
 
         )
 
-        trade.close_reason = close_reason
+        # ----------------------------------
+        # Update account
+        # ----------------------------------
 
-        trade.status = "CLOSED"
-
-        self.account.deposit(
+        self.account.apply_profit_loss(
 
             trade.profit_loss
 
