@@ -255,3 +255,150 @@ class TradeHistory:
             3
 
         )
+
+    # ----------------------------------
+    # Trade Efficiency
+    # ----------------------------------
+
+    def average_trade(self):
+
+        closed = self.closed_trades()
+
+        if not closed:
+
+            return 0.0
+
+        return round(
+
+            self.total_profit_loss()
+            / len(closed),
+
+            5
+
+        )
+
+    def expectancy(self):
+
+        closed = self.closed_trades()
+
+        if not closed:
+
+            return 0.0
+
+        win_rate = (
+
+            self.winning_trades()
+            / len(closed)
+
+        )
+
+        loss_rate = (
+
+            self.losing_trades()
+            / len(closed)
+
+        )
+
+        expectancy = (
+
+            win_rate * self.average_win()
+
+            - loss_rate * self.average_loss()
+
+        )
+
+        return round(
+
+            expectancy,
+
+            5
+
+        )
+
+    # ----------------------------------
+    # Direction Statistics
+    # ----------------------------------
+
+    def buy_trades(self):
+
+        return sum(
+
+            1
+
+            for trade in self.trades
+
+            if trade.action == "BUY"
+
+        )
+
+    def sell_trades(self):
+
+        return sum(
+
+            1
+
+            for trade in self.trades
+
+            if trade.action == "SELL"
+
+        )
+
+    # ----------------------------------
+    # Winning Streak
+    # ----------------------------------
+
+    def longest_winning_streak(self):
+
+        current = 0
+
+        longest = 0
+
+        for trade in self.closed_trades():
+
+            if trade.profit_loss > 0:
+
+                current += 1
+
+                longest = max(
+
+                    longest,
+
+                    current
+
+                )
+
+            else:
+
+                current = 0
+
+        return longest
+
+    # ----------------------------------
+    # Losing Streak
+    # ----------------------------------
+
+    def longest_losing_streak(self):
+
+        current = 0
+
+        longest = 0
+
+        for trade in self.closed_trades():
+
+            if trade.profit_loss < 0:
+
+                current += 1
+
+                longest = max(
+
+                    longest,
+
+                    current
+
+                )
+
+            else:
+
+                current = 0
+
+        return longest
