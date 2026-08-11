@@ -22,69 +22,9 @@ class Report:
 
         trades = history.all()
 
-        closed_trades = [
+        closed_trades = history.closed_trades()
 
-            trade
-
-            for trade in trades
-
-            if trade.status == "CLOSED"
-
-        ]
-
-        open_trades = [
-
-            trade
-
-            for trade in trades
-
-            if trade.status == "OPEN"
-
-        ]
-
-        winning_trades = sum(
-
-            1
-
-            for trade in closed_trades
-
-            if trade.profit_loss > 0
-
-        )
-
-        losing_trades = sum(
-
-            1
-
-            for trade in closed_trades
-
-            if trade.profit_loss < 0
-
-        )
-
-        closed_count = len(closed_trades)
-
-        if closed_count > 0:
-
-            win_rate = round(
-
-                (winning_trades / closed_count) * 100,
-
-                2
-
-            )
-
-        else:
-
-            win_rate = 0.0
-
-        total_profit_loss = sum(
-
-            trade.profit_loss
-
-            for trade in closed_trades
-
-        )
+        open_trades = history.open_trades()
 
         print()
 
@@ -108,6 +48,129 @@ class Report:
 
         )
 
+        print(
+
+            f"Total Trades Opened : "
+
+            f"{history.total_trades()}"
+
+        )
+
+        print(
+
+            f"Closed Trades       : "
+
+            f"{len(closed_trades)}"
+
+        )
+
+        print(
+
+            f"Open Trades         : "
+
+            f"{len(open_trades)}"
+
+        )
+
+        print(
+
+            f"Winning Trades      : "
+
+            f"{history.winning_trades()}"
+
+        )
+
+        print(
+
+            f"Losing Trades       : "
+
+            f"{history.losing_trades()}"
+
+        )
+
+        print(
+
+            f"Win Rate            : "
+
+            f"{history.win_rate()}%"
+
+        )
+
+        print()
+
+        print("-----------------------------------")
+
+        print("PROFITABILITY")
+
+        print("-----------------------------------")
+
+        print(
+
+            f"Gross Profit        : "
+
+            f"${history.gross_profit():.5f}"
+
+        )
+
+        print(
+
+            f"Gross Loss          : "
+
+            f"${history.gross_loss():.5f}"
+
+        )
+
+        print(
+
+            f"Average Win         : "
+
+            f"${history.average_win():.5f}"
+
+        )
+
+        print(
+
+            f"Average Loss        : "
+
+            f"${history.average_loss():.5f}"
+
+        )
+
+        print(
+
+            f"Largest Win         : "
+
+            f"${history.largest_win():.5f}"
+
+        )
+
+        print(
+
+            f"Largest Loss        : "
+
+            f"${history.largest_loss():.5f}"
+
+        )
+
+        print(
+
+            f"Profit Factor       : "
+
+            f"{history.profit_factor():.3f}"
+
+        )
+
+        print()
+
+        print(
+
+            f"Total P/L           : "
+
+            f"${history.total_profit_loss():.2f}"
+
+        )
+
+        print("===================================")
         print(
 
             f"Total Trades Opened : "
