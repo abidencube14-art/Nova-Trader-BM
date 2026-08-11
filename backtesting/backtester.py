@@ -48,6 +48,10 @@ class Backtester:
                 indicators
             )
 
+            # ----------------------------------
+            # Check existing trade
+            # ----------------------------------
+
             if open_trade is not None:
 
                 open_trade = self.simulator.check_exit(
@@ -63,6 +67,10 @@ class Backtester:
                 if open_trade.status == "CLOSED":
 
                     open_trade = None
+
+            # ----------------------------------
+            # Find new trade
+            # ----------------------------------
 
             if open_trade is None:
 
@@ -100,12 +108,27 @@ class Backtester:
 
                     open_trade = trade
 
+            # ----------------------------------
+            # Account statistics
+            # ----------------------------------
+
+            account = self.simulator.account
+
             results.append({
 
                 "index": i,
 
                 "balance":
-                    self.simulator.account.get_balance(),
+                    account.get_balance(),
+
+                "peak_balance":
+                    account.get_peak_balance(),
+
+                "drawdown":
+                    account.get_max_drawdown(),
+
+                "return_percent":
+                    account.get_return_percent(),
 
                 "trade": open_trade
 
