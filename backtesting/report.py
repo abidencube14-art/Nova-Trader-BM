@@ -8,27 +8,55 @@ Nova-Trader-BM
 
 class Report:
 
-    def generate(
-
-        self,
-
-        simulator
-
-    ):
+    def generate(self, simulator):
 
         history = simulator.history
 
         account = simulator.account
 
-        closed_count = len(history.closed_trades())
+        # ----------------------------------
+        # Statistics
+        # ----------------------------------
 
-        open_count = len(history.open_trades())
+        total_trades = history.total_trades()
 
-        trades = history.all()
+        closed_trades = len(
+            history.closed_trades()
+        )
 
-        closed_trades = history.closed_trades()
+        open_trades = len(
+            history.open_trades()
+        )
 
-        open_trades = history.open_trades()
+        winning_trades = history.winning_trades()
+
+        losing_trades = history.losing_trades()
+
+        win_rate = history.win_rate()
+
+        gross_profit = history.gross_profit()
+
+        gross_loss = history.gross_loss()
+
+        average_win = history.average_win()
+
+        average_loss = history.average_loss()
+
+        largest_win = history.largest_win()
+
+        largest_loss = history.largest_loss()
+
+        profit_factor = history.profit_factor()
+
+        total_profit_loss = (
+            history.total_profit_loss()
+        )
+
+        balance = account.get_balance()
+
+        # ----------------------------------
+        # Report
+        # ----------------------------------
 
         print()
 
@@ -39,70 +67,95 @@ class Report:
         print("===================================")
 
         print(
-
             "Starting Balance : $10.00"
-
         )
 
         print(
-
             f"Ending Balance   : "
-
-            f"${account.get_balance():.2f}"
-
+            f"${balance:.2f}"
         )
 
         print(
-
             f"Total Trades Opened : "
-
-            f"{history.total_trades()}"
-
+            f"{total_trades}"
         )
 
         print(
-
             f"Closed Trades       : "
-
-            f"{len(closed_trades)}"
-
+            f"{closed_trades}"
         )
 
         print(
-
             f"Open Trades         : "
-
-            f"{len(open_trades)}"
-
+            f"{open_trades}"
         )
 
         print(
-
             f"Winning Trades      : "
-
-            f"{history.winning_trades()}"
-
+            f"{winning_trades}"
         )
 
         print(
-
             f"Losing Trades       : "
-
-            f"{history.losing_trades()}"
-
+            f"{losing_trades}"
         )
 
         print(
-
             f"Win Rate            : "
-
-            f"{history.win_rate()}%"
-
+            f"{win_rate}%"
         )
 
         print()
 
         print("-----------------------------------")
+
+        print("PROFITABILITY")
+
+        print("-----------------------------------")
+
+        print(
+            f"Gross Profit        : "
+            f"${gross_profit:.5f}"
+        )
+
+        print(
+            f"Gross Loss          : "
+            f"${gross_loss:.5f}"
+        )
+
+        print(
+            f"Average Win         : "
+            f"${average_win:.5f}"
+        )
+
+        print(
+            f"Average Loss        : "
+            f"${average_loss:.5f}"
+        )
+
+        print(
+            f"Largest Win         : "
+            f"${largest_win:.5f}"
+        )
+
+        print(
+            f"Largest Loss        : "
+            f"${largest_loss:.5f}"
+        )
+
+        print(
+            f"Profit Factor       : "
+            f"{profit_factor:.3f}"
+        )
+
+        print()
+
+        print(
+            f"Total P/L           : "
+            f"${total_profit_loss:.2f}"
+        )
+
+        print("===================================")        print("-----------------------------------")
 
         print("PROFITABILITY")
 
