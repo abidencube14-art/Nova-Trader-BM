@@ -14,10 +14,6 @@ class Report:
 
         account = simulator.account
 
-        # ----------------------------------
-        # Trade statistics
-        # ----------------------------------
-
         total_trades = history.total_trades()
 
         closed_trades = len(
@@ -33,10 +29,6 @@ class Report:
         losing_trades = history.losing_trades()
 
         win_rate = history.win_rate()
-
-        # ----------------------------------
-        # Profitability statistics
-        # ----------------------------------
 
         gross_profit = history.gross_profit()
 
@@ -56,50 +48,23 @@ class Report:
             history.total_profit_loss()
         )
 
-        # ----------------------------------
-        # Account statistics
-        # ----------------------------------
+        average_trade = history.average_trade()
 
-        starting_balance = (
-            account.get_initial_balance()
+        expectancy = history.expectancy()
+
+        buy_trades = history.buy_trades()
+
+        sell_trades = history.sell_trades()
+
+        winning_streak = (
+            history.longest_winning_streak()
         )
 
-        balance = (
-            account.get_balance()
+        losing_streak = (
+            history.longest_losing_streak()
         )
 
-        peak_balance = (
-            account.get_peak_balance()
-        )
-
-        max_drawdown = (
-            account.get_max_drawdown()
-        )
-
-        return_percent = (
-            account.get_return_percent()
-        )
-
-        if peak_balance > 0:
-
-            drawdown_percent = round(
-
-                (
-                    max_drawdown
-                    / peak_balance
-                ) * 100,
-
-                2
-
-            )
-
-        else:
-
-            drawdown_percent = 0.0
-
-        # ----------------------------------
-        # Report
-        # ----------------------------------
+        balance = account.get_balance()
 
         print()
 
@@ -108,63 +73,67 @@ class Report:
         print("===================================")
 
         print(
-            f"Starting Balance : "
-            f"${starting_balance:.2f}"
+            "Starting Balance : $10.00"
         )
 
         print(
-            f"Ending Balance   : "
-            f"${balance:.2f}"
+            f"Ending Balance   : ${balance:.2f}"
+        )
+
+        print()
+
+        print(
+            f"Total Trades Opened : {total_trades}"
         )
 
         print(
-            f"Return           : "
-            f"{return_percent:.2f}%"
+            f"Closed Trades       : {closed_trades}"
         )
 
         print(
-            f"Peak Balance     : "
-            f"${peak_balance:.2f}"
+            f"Open Trades         : {open_trades}"
         )
 
         print(
-            f"Max Drawdown     : "
-            f"${max_drawdown:.2f}"
+            f"Winning Trades      : {winning_trades}"
         )
 
         print(
-            f"Drawdown %       : "
-            f"{drawdown_percent:.2f}%"
+            f"Losing Trades       : {losing_trades}"
         )
 
         print(
-            f"Total Trades Opened : "
-            f"{total_trades}"
+            f"Win Rate            : {win_rate}%"
+        )
+
+        print()
+
+        print("-----------------------------------")
+        print("TRADE DISTRIBUTION")
+        print("-----------------------------------")
+
+        print(
+            f"BUY Trades          : {buy_trades}"
         )
 
         print(
-            f"Closed Trades       : "
-            f"{closed_trades}"
+            f"SELL Trades         : {sell_trades}"
         )
 
         print(
-            f"Open Trades         : "
-            f"{open_trades}"
+            f"Avg Trade           : ${average_trade:.5f}"
         )
 
         print(
-            f"Winning Trades      : "
-            f"{winning_trades}"
+            f"Expectancy          : ${expectancy:.5f}"
         )
 
         print(
-            f"Losing Trades       : "
-            f"{losing_trades}"
+            f"Longest Win Streak  : {winning_streak}"
         )
 
         print(
-            f"Win Rate            : "
-            f"{win_rate}%"
+            f"Longest Loss Streak : {losing_streak}"
         )
 
         print()
@@ -174,45 +143,37 @@ class Report:
         print("-----------------------------------")
 
         print(
-            f"Gross Profit        : "
-            f"${gross_profit:.5f}"
+            f"Gross Profit        : ${gross_profit:.5f}"
         )
 
         print(
-            f"Gross Loss          : "
-            f"${gross_loss:.5f}"
+            f"Gross Loss          : ${gross_loss:.5f}"
         )
 
         print(
-            f"Average Win         : "
-            f"${average_win:.5f}"
+            f"Average Win         : ${average_win:.5f}"
         )
 
         print(
-            f"Average Loss        : "
-            f"${average_loss:.5f}"
+            f"Average Loss        : ${average_loss:.5f}"
         )
 
         print(
-            f"Largest Win         : "
-            f"${largest_win:.5f}"
+            f"Largest Win         : ${largest_win:.5f}"
         )
 
         print(
-            f"Largest Loss        : "
-            f"${largest_loss:.5f}"
+            f"Largest Loss        : ${largest_loss:.5f}"
         )
 
         print(
-            f"Profit Factor       : "
-            f"{profit_factor:.3f}"
+            f"Profit Factor       : {profit_factor:.3f}"
         )
 
         print()
 
         print(
-            f"Total P/L           : "
-            f"${total_profit_loss:.2f}"
+            f"Total P/L           : ${total_profit_loss:.2f}"
         )
 
         print("===================================")
