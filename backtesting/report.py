@@ -20,6 +20,10 @@ class Report:
 
         account = simulator.account
 
+        closed_count = len(history.closed_trades())
+
+        open_count = len(history.open_trades())
+
         trades = history.all()
 
         closed_trades = history.closed_trades()
