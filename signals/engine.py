@@ -6,9 +6,7 @@ Nova-Trader-BM
 """
 
 from signals.rules import TradingRules
-
 from signals.confidence import ConfidenceCalculator
-
 from signals.signal import TradingSignal
 
 
@@ -22,17 +20,42 @@ class SignalEngine:
 
     def generate(self, indicators):
 
-        score, reasons = self.rules.evaluate(indicators)
-
-        confidence = self.confidence.calculate(
-
-            score,
-
-            4
-
+        score, reasons = self.rules.evaluate(
+            indicators
         )
 
-        if confidence >= 75:
+        confidence = self.confidence.calculate(
+            score,
+            4
+        )
+
+        rsi = indicators["rsi"]
+
+        # ----------------------------------
+        # RSI safety filters
+        # ----------------------------------
+
+        if rsi > 70:
+
+            action = "WAIT"
+
+            confidence = 0
+
+            reasons.append(
+                "BUY blocked: RSI above 70"
+            )
+
+        elif rsi < 30:
+
+            action = "WAIT"
+
+            confidence = 0
+
+            reasons.append(
+                "SELL blocked: RSI below 30"
+            )
+
+        elif confidence >= 75:
 
             action = "BUY"
 
