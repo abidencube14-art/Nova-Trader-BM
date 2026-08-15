@@ -19,7 +19,7 @@ class TradingRules:
         rsi = indicators["rsi"]
 
         # ----------------------------------
-        # EMA TREND
+        # SHORT-TERM EMA TREND
         # ----------------------------------
 
         if indicators["ema20"] > indicators["ema50"]:
@@ -39,7 +39,7 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # LONG-TERM TREND
+        # LONG-TERM EMA TREND
         # ----------------------------------
 
         if indicators["ema50"] > indicators["ema200"]:
@@ -82,7 +82,26 @@ class TradingRules:
         # RSI
         # ----------------------------------
 
-        if rsi < 30:
+        # Bullish momentum zone
+        if 40 <= rsi < 65:
+
+            buy_score += 1
+
+            buy_reasons.append(
+                "RSI supports bullish momentum"
+            )
+
+        # Bearish momentum zone
+        elif 35 < rsi <= 60:
+
+            sell_score += 1
+
+            sell_reasons.append(
+                "RSI supports bearish momentum"
+            )
+
+        # Oversold
+        elif rsi <= 35:
 
             buy_score += 1
 
@@ -90,28 +109,13 @@ class TradingRules:
                 "RSI oversold"
             )
 
-        elif rsi > 70:
+        # Overbought
+        elif rsi >= 65:
 
             sell_score += 1
 
             sell_reasons.append(
                 "RSI overbought"
-            )
-
-        elif 30 <= rsi <= 50:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "RSI supports BUY"
-            )
-
-        elif 50 < rsi <= 70:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "RSI supports SELL"
             )
 
         # ----------------------------------
@@ -126,7 +130,7 @@ class TradingRules:
                 buy_reasons
             )
 
-        elif sell_score > buy_score:
+        if sell_score > buy_score:
 
             return (
                 sell_score,
