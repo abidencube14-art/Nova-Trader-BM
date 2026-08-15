@@ -23,7 +23,7 @@ class Backtester:
 
         self.simulator = SimulatorEngine()
 
-    def run(self, dataframe):
+    def run(self, dataframe, symbol="BACKTEST"):
 
         if dataframe is None or len(dataframe) < 200:
 
@@ -48,10 +48,6 @@ class Backtester:
                 indicators
             )
 
-            # ----------------------------------
-            # Check existing trade
-            # ----------------------------------
-
             if open_trade is not None:
 
                 open_trade = self.simulator.check_exit(
@@ -67,10 +63,6 @@ class Backtester:
                 if open_trade.status == "CLOSED":
 
                     open_trade = None
-
-            # ----------------------------------
-            # Find new trade
-            # ----------------------------------
 
             if open_trade is None:
 
@@ -94,7 +86,7 @@ class Backtester:
 
                 trade = self.simulator.execute(
 
-                    symbol="BACKTEST",
+                    symbol=symbol,
 
                     decision=decision,
 
@@ -108,27 +100,12 @@ class Backtester:
 
                     open_trade = trade
 
-            # ----------------------------------
-            # Account statistics
-            # ----------------------------------
-
-            account = self.simulator.account
-
             results.append({
 
                 "index": i,
 
                 "balance":
-                    account.get_balance(),
-
-                "peak_balance":
-                    account.get_peak_balance(),
-
-                "drawdown":
-                    account.get_max_drawdown(),
-
-                "return_percent":
-                    account.get_return_percent(),
+                    self.simulator.account.get_balance(),
 
                 "trade": open_trade
 
