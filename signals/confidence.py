@@ -15,11 +15,9 @@ class ConfidenceCalculator:
     ):
 
         if maximum <= 0:
-
             return 0
 
         if score <= 0:
-
             return 0
 
         confidence = (
