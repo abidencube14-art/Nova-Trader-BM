@@ -82,23 +82,13 @@ class TradingRules:
         # RSI
         # ----------------------------------
 
-        if 30 <= rsi <= 70:
+        if rsi < 30:
 
-            if rsi <= 50:
+            buy_score += 1
 
-                buy_score += 1
-
-                buy_reasons.append(
-                    "RSI supports BUY"
-                )
-
-            if rsi >= 50:
-
-                sell_score += 1
-
-                sell_reasons.append(
-                    "RSI supports SELL"
-                )
+            buy_reasons.append(
+                "RSI oversold"
+            )
 
         elif rsi > 70:
 
@@ -108,16 +98,24 @@ class TradingRules:
                 "RSI overbought"
             )
 
-        elif rsi < 30:
+        elif 30 <= rsi <= 50:
 
             buy_score += 1
 
             buy_reasons.append(
-                "RSI oversold"
+                "RSI supports BUY"
+            )
+
+        elif 50 < rsi <= 70:
+
+            sell_score += 1
+
+            sell_reasons.append(
+                "RSI supports SELL"
             )
 
         # ----------------------------------
-        # Final result
+        # FINAL DIRECTION
         # ----------------------------------
 
         if buy_score > sell_score:
@@ -128,7 +126,7 @@ class TradingRules:
                 buy_reasons
             )
 
-        if sell_score > buy_score:
+        elif sell_score > buy_score:
 
             return (
                 sell_score,
@@ -142,21 +140,4 @@ class TradingRules:
             [
                 "BUY and SELL scores are equal"
             ]
-        )
-        # Momentum
-
-        if indicators["macd"] > indicators["signal"]:
-
-            score += 1
-
-            reasons.append("MACD bullish")
-
-        # RSI
-
-        if 50 <= indicators["rsi"] <= 70:
-
-            score += 1
-
-            reasons.append("Healthy RSI")
-
-        return score, reasons
+            )
