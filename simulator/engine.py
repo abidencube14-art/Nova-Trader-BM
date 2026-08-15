@@ -21,8 +21,10 @@ class SimulatorEngine:
         self.history = TradeHistory()
 
         # Commission charged per completed trade.
-        # Kept small for the $10 simulation account.
         self.commission = 0.01
+
+        # Standard FX contract size.
+        self.contract_size = 100000
 
     def execute(
 
@@ -144,11 +146,93 @@ class SimulatorEngine:
 
         )
 
-        # Convert price movement into
-        # simulated monetary P/L.
+        # ----------------------------------
+        # Calculate monetary P/L correctly
+        # ----------------------------------
+
+        price_difference = (
+
+            exit_price - trade.entry
+
+        )
+
+        if trade.action == "SELL":
+
+            price_difference = (
+
+                trade.entry - exit_price
+
+            )
+
+        units = (
+
+            trade.lot
+
+            * self.contract_size
+
+        )
+
+        # ----------------------------------
+        # USD-quoted pairs
+        #
+        # EURUSD
+        # GBPUSD
+        # AUDUSD
+        # ----------------------------------
+
+        if trade.symbol.endswith("USD"):
+
+            profit_loss = (
+
+                price_difference
+
+                * units
+
+            )
+
+        # ----------------------------------
+        # USD-base pairs
+        #
+        # USDJPY
+        #
+        # Convert JPY P/L back to USD.
+        # ----------------------------------
+
+        elif trade.symbol.startswith("USD"):
+
+            if exit_price <= 0:
+
+                profit_loss = 0.0
+
+            else:
+
+                profit_loss = (
+
+                    price_difference
+
+                    * units
+
+                    / exit_price
+
+                )
+
+        # ----------------------------------
+        # Fallback for other currency pairs
+        # ----------------------------------
+
+        else:
+
+            profit_loss = (
+
+                price_difference
+
+                * units
+
+            )
+
         trade.profit_loss = round(
 
-            trade.profit_loss * 100000,
+            profit_loss,
 
             2
 
@@ -161,6 +245,7 @@ class SimulatorEngine:
         trade.profit_loss = round(
 
             trade.profit_loss
+
             - self.commission,
 
             2
