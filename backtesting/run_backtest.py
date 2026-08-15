@@ -1,6 +1,6 @@
 """
 ==========================================
-Nova Backtest Runner
+Nova Multi-Pair Backtest Runner
 Nova-Trader-BM
 ==========================================
 """
@@ -10,47 +10,82 @@ from backtesting.backtester import Backtester
 from backtesting.report import Report
 
 
+SYMBOLS = [
+
+    "EURUSD",
+
+    "GBPUSD",
+
+    "USDJPY",
+
+    "AUDUSD"
+
+]
+
+
 def main():
 
     print("===================================")
-    print("NOVA TRADER BM - BACKTEST")
+
+    print("NOVA TRADER BM - MULTI-PAIR BACKTEST")
+
     print("===================================")
 
     market = CandleFeed()
 
-    candles = market.latest(
+    for symbol in SYMBOLS:
 
-        symbol="EURUSD",
+        print()
 
-        timeframe=5,
+        print("-----------------------------------")
 
-        count=1000
+        print(
+            f"BACKTESTING {symbol}"
+        )
 
-    )
+        print("-----------------------------------")
 
-    if candles is None or len(candles) < 200:
+        candles = market.latest(
 
-        print("Not enough historical candle data.")
+            symbol=symbol,
 
-        return
+            timeframe=5,
 
-    print(
+            count=1000
 
-        f"Loaded {len(candles)} candles"
+        )
 
-    )
+        if candles is None or len(candles) < 200:
 
-    backtester = Backtester()
+            print(
+                f"Not enough data for {symbol}."
+            )
 
-    backtester.run(candles)
+            continue
 
-    report = Report()
+        print(
+            f"Loaded {len(candles)} candles"
+        )
 
-    report.generate(
+        backtester = Backtester()
 
-        backtester.simulator
+        backtester.run(candles)
 
-    )
+        report = Report()
+
+        report.generate(
+
+            backtester.simulator
+
+        )
+
+    print()
+
+    print("===================================")
+
+    print("MULTI-PAIR BACKTEST COMPLETE")
+
+    print("===================================")
 
 
 if __name__ == "__main__":
