@@ -18,108 +18,139 @@ class TradingRules:
 
         rsi = indicators["rsi"]
 
+        ema20 = indicators["ema20"]
+        ema50 = indicators["ema50"]
+        ema200 = indicators["ema200"]
+
+        macd = indicators["macd"]
+        signal = indicators["signal"]
+
         # ----------------------------------
-        # SHORT-TERM EMA TREND
+        # TREND ALIGNMENT
         # ----------------------------------
 
-        if indicators["ema20"] > indicators["ema50"]:
+        bullish_trend = (
+            ema20 > ema50
+            and ema50 > ema200
+        )
 
-            buy_score += 1
+        bearish_trend = (
+            ema20 < ema50
+            and ema50 < ema200
+        )
+
+        # ----------------------------------
+        # BULLISH SETUP
+        # ----------------------------------
+
+        if bullish_trend:
+
+            buy_score += 2
 
             buy_reasons.append(
-                "EMA20 above EMA50"
+                "Bullish EMA alignment"
             )
 
-        elif indicators["ema20"] < indicators["ema50"]:
+            # MACD confirmation
 
-            sell_score += 1
+            if macd > signal:
+
+                buy_score += 1
+
+                buy_reasons.append(
+                    "MACD bullish"
+                )
+
+            # RSI confirmation
+
+            if 40 <= rsi <= 65:
+
+                buy_score += 1
+
+                buy_reasons.append(
+                    "RSI supports BUY"
+                )
+
+            elif rsi < 40:
+
+                buy_score += 1
+
+                buy_reasons.append(
+                    "RSI recovering from oversold"
+                )
+
+            elif rsi > 70:
+
+                buy_score -= 1
+
+                buy_reasons.append(
+                    "RSI overbought"
+                )
+
+        # ----------------------------------
+        # BEARISH SETUP
+        # ----------------------------------
+
+        elif bearish_trend:
+
+            sell_score += 2
 
             sell_reasons.append(
-                "EMA20 below EMA50"
+                "Bearish EMA alignment"
+            )
+
+            # MACD confirmation
+
+            if macd < signal:
+
+                sell_score += 1
+
+                sell_reasons.append(
+                    "MACD bearish"
+                )
+
+            # RSI confirmation
+
+            if 35 <= rsi <= 60:
+
+                sell_score += 1
+
+                sell_reasons.append(
+                    "RSI supports SELL"
+                )
+
+            elif rsi > 60:
+
+                sell_score += 1
+
+                sell_reasons.append(
+                    "RSI rejecting overbought zone"
+                )
+
+            elif rsi < 30:
+
+                sell_score -= 1
+
+                sell_reasons.append(
+                    "RSI oversold"
+                )
+
+        # ----------------------------------
+        # NO CLEAR TREND
+        # ----------------------------------
+
+        else:
+
+            return (
+                0,
+                "WAIT",
+                [
+                    "EMA trend alignment is unclear"
+                ]
             )
 
         # ----------------------------------
-        # LONG-TERM EMA TREND
-        # ----------------------------------
-
-        if indicators["ema50"] > indicators["ema200"]:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "EMA50 above EMA200"
-            )
-
-        elif indicators["ema50"] < indicators["ema200"]:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "EMA50 below EMA200"
-            )
-
-        # ----------------------------------
-        # MACD MOMENTUM
-        # ----------------------------------
-
-        if indicators["macd"] > indicators["signal"]:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "MACD bullish"
-            )
-
-        elif indicators["macd"] < indicators["signal"]:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "MACD bearish"
-            )
-
-        # ----------------------------------
-        # RSI
-        # ----------------------------------
-
-        # Bullish momentum zone
-        if 40 <= rsi < 65:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "RSI supports bullish momentum"
-            )
-
-        # Bearish momentum zone
-        elif 35 < rsi <= 60:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "RSI supports bearish momentum"
-            )
-
-        # Oversold
-        elif rsi <= 35:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "RSI oversold"
-            )
-
-        # Overbought
-        elif rsi >= 65:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "RSI overbought"
-            )
-
-        # ----------------------------------
-        # FINAL DIRECTION
+        # FINAL RESULT
         # ----------------------------------
 
         if buy_score > sell_score:
@@ -142,6 +173,6 @@ class TradingRules:
             0,
             "WAIT",
             [
-                "BUY and SELL scores are equal"
+                "Signal confirmation is insufficient"
             ]
             )
