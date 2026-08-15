@@ -29,6 +29,8 @@ class RiskEngine:
 
         decision,
 
+        symbol,
+
         balance,
 
         entry,
@@ -42,31 +44,35 @@ class RiskEngine:
             return None
 
         # ----------------------------------
-        # Calculate Stop Loss
+        # Calculate direction-aware SL
         # ----------------------------------
 
         sl = self.sl.calculate(
 
             entry,
 
-            atr
+            atr,
+
+            decision.action
 
         )
 
         # ----------------------------------
-        # Calculate Take Profit
+        # Calculate direction-aware TP
         # ----------------------------------
 
         tp = self.tp.calculate(
 
             entry,
 
-            atr
+            atr,
+
+            decision.action
 
         )
 
         # ----------------------------------
-        # Calculate actual stop distance
+        # Actual stop distance
         # ----------------------------------
 
         stop_distance = abs(
@@ -75,21 +81,39 @@ class RiskEngine:
 
         )
 
-        # ----------------------------------
-        # Convert price distance to pips
-        # ----------------------------------
-
-        stop_loss_pips = stop_distance * 10000
-
-        if stop_loss_pips <= 0:
+        if stop_distance <= 0:
 
             return None
 
         # ----------------------------------
-        # Standard pip value
+        # Pair-specific pip size
         # ----------------------------------
 
-        pip_value = 10
+        if symbol.endswith("JPY"):
+
+            pip_size = 0.01
+
+        else:
+
+            pip_size = 0.0001
+
+        stop_loss_pips = (
+
+            stop_distance / pip_size
+
+        )
+
+        # ----------------------------------
+        # Pip value
+        # ----------------------------------
+
+        if symbol.endswith("JPY"):
+
+            pip_value = 9.0
+
+        else:
+
+            pip_value = 10.0
 
         # ----------------------------------
         # Position size
@@ -106,6 +130,10 @@ class RiskEngine:
             pip_value
 
         )
+
+        if lot <= 0:
+
+            return None
 
         return {
 
