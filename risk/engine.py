@@ -6,11 +6,8 @@ Nova-Trader-BM
 """
 
 from risk.position_size import PositionSizer
-
 from risk.stop_loss import StopLoss
-
 from risk.take_profit import TakeProfit
-
 from risk.filters import RiskFilters
 
 
@@ -28,21 +25,75 @@ class RiskEngine:
 
     def evaluate(
 
-    self,
+        self,
 
-    decision,
+        decision,
 
-    balance,
+        balance,
 
-    entry,
+        entry,
 
-    atr
+        atr
 
-):
+    ):
 
         if not self.filters.allow(decision):
 
             return None
+
+        # ----------------------------------
+        # Calculate Stop Loss
+        # ----------------------------------
+
+        sl = self.sl.calculate(
+
+            entry,
+
+            atr
+
+        )
+
+        # ----------------------------------
+        # Calculate Take Profit
+        # ----------------------------------
+
+        tp = self.tp.calculate(
+
+            entry,
+
+            atr
+
+        )
+
+        # ----------------------------------
+        # Calculate actual stop distance
+        # ----------------------------------
+
+        stop_distance = abs(
+
+            entry - sl
+
+        )
+
+        # ----------------------------------
+        # Convert price distance to pips
+        # ----------------------------------
+
+        stop_loss_pips = stop_distance * 10000
+
+        if stop_loss_pips <= 0:
+
+            return None
+
+        # ----------------------------------
+        # Standard pip value
+        # ----------------------------------
+
+        pip_value = 10
+
+        # ----------------------------------
+        # Position size
+        # ----------------------------------
 
         lot = self.sizer.calculate(
 
@@ -50,9 +101,9 @@ class RiskEngine:
 
             1,
 
-            20,
+            stop_loss_pips,
 
-            10
+            pip_value
 
         )
 
@@ -60,20 +111,8 @@ class RiskEngine:
 
             "lot": lot,
 
-            "sl": self.sl.calculate(
+            "sl": sl,
 
-                entry,
-
-                atr
-
-            ),
-
-            "tp": self.tp.calculate(
-
-                entry,
-
-                atr
-
-            )
+            "tp": tp
 
         }
