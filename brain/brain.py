@@ -26,6 +26,8 @@ class NovaBrain:
     def think(
 
         self,
+        
+        symbol,
 
         trend,
 
@@ -45,17 +47,19 @@ class NovaBrain:
 
         decision = self.engine.evaluate(
 
-            trend,
+            symbol=symbol,
 
-            indicators,
+            trend=trend,
 
-            candle,
+            indicators=indicators,
+           
+            candle=candle,
 
-            support,
+            support=support,
 
-            resistance,
+            resistance=resistance,
 
-            volatility,
+            volatility=volatility,
 
             entry=entry
 
