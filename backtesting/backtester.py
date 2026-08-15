@@ -80,7 +80,9 @@ class Backtester:
 
                     volatility=market["volatility"],
 
-                    entry=latest["close"]
+                    entry=latest["close"],
+
+                    symbol=symbol
 
                 )
 
