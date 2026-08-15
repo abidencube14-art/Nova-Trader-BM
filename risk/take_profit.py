@@ -16,9 +16,19 @@ class TakeProfit:
 
         atr,
 
+        action,
+
         multiplier=3
 
     ):
+
+        if action == "SELL":
+
+            return entry - (
+
+                atr * multiplier
+
+            )
 
         return entry + (
 
