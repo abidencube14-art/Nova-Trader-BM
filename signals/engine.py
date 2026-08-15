@@ -18,6 +18,8 @@ class SignalEngine:
 
         self.confidence = ConfidenceCalculator()
 
+        self.signal_count = 0
+
     def generate(self, indicators):
 
         score, direction, reasons = self.rules.evaluate(
@@ -41,6 +43,77 @@ class SignalEngine:
 
             action = "WAIT"
 
+        # ----------------------------------
+        # Diagnostic output
+        # ----------------------------------
+
+        self.signal_count += 1
+
+        if action != "WAIT" and self.signal_count <= 10:
+
+            print()
+            print("-----------------------------------")
+            print("NOVA SIGNAL DIAGNOSTIC")
+            print("-----------------------------------")
+
+            print(
+                f"EMA20   : {indicators['ema20']}"
+            )
+
+            print(
+                f"EMA50   : {indicators['ema50']}"
+            )
+
+            print(
+                f"EMA200  : {indicators['ema200']}"
+            )
+
+            print(
+                f"RSI     : {indicators['rsi']:.2f}"
+            )
+
+            print(
+                f"MACD    : {indicators['macd']}"
+            )
+
+            print(
+                f"Signal  : {indicators['signal']}"
+            )
+
+            print(
+                f"Histogram: {indicators['histogram']}"
+            )
+
+            print()
+
+            print(
+                f"Direction : {direction}"
+            )
+
+            print(
+                f"Score     : {score}/4"
+            )
+
+            print(
+                f"Confidence: {confidence}%"
+            )
+
+            print(
+                f"Action    : {action}"
+            )
+
+            print(
+                "Reasons:"
+            )
+
+            for reason in reasons:
+
+                print(
+                    f"  - {reason}"
+                )
+
+            print("-----------------------------------")
+
         return TradingSignal(
 
             action=action,
@@ -49,4 +122,4 @@ class SignalEngine:
 
             reason=", ".join(reasons)
 
-        )
+            )
