@@ -16,9 +16,19 @@ class StopLoss:
 
         atr,
 
+        action,
+
         multiplier=2
 
     ):
+
+        if action == "SELL":
+
+            return entry + (
+
+                atr * multiplier
+
+            )
 
         return entry - (
 
