@@ -69,7 +69,10 @@ def main():
 
         backtester = Backtester()
 
-        backtester.run(candles)
+        backtester.run(
+            candles,
+            symbol=symbol
+        )
 
         report = Report()
 
