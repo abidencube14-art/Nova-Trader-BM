@@ -52,6 +52,8 @@ class MasterTradingLoop:
         )
 
         decision = self.brain.think(
+            
+            symbol=symbol,
 
             trend=market["trend"],
 
