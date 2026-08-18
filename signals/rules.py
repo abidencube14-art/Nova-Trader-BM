@@ -86,29 +86,11 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # RSI
+        # RSI FILTER
         # ----------------------------------
 
-        # BUY confirmation
-        if 50 <= rsi <= 65:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "RSI supports BUY"
-            )
-
-        # SELL confirmation
-        elif 35 <= rsi < 50:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "RSI supports SELL"
-            )
-
         # Strongly overbought
-        elif rsi > 70:
+        if rsi > 70:
 
             sell_score += 1
 
@@ -119,8 +101,61 @@ class TradingRules:
         # Strongly oversold
         elif rsi < 30:
 
+            buy_score += 1
+
             buy_reasons.append(
-                "RSI oversold - no confirmation"
+                "RSI oversold"
+            )
+
+        # Healthy BUY zone
+        elif 50 <= rsi <= 65:
+
+            buy_score += 1
+
+            buy_reasons.append(
+                "RSI supports BUY"
+            )
+
+        # Healthy SELL zone
+        elif 35 <= rsi < 50:
+
+            sell_score += 1
+
+            sell_reasons.append(
+                "RSI supports SELL"
+            )
+
+        # Neutral zone
+        else:
+
+            buy_reasons.append(
+                "RSI neutral"
+            )
+
+            sell_reasons.append(
+                "RSI neutral"
+            )
+
+        # ----------------------------------
+        # HARD RSI SAFETY FILTER
+        # ----------------------------------
+
+        # Do NOT buy when extremely overbought
+        if rsi >= 75:
+
+            return (
+                sell_score,
+                "SELL",
+                sell_reasons
+            )
+
+        # Do NOT sell when extremely oversold
+        if rsi <= 25:
+
+            return (
+                buy_score,
+                "BUY",
+                buy_reasons
             )
 
         # ----------------------------------
