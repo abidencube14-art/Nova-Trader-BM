@@ -13,6 +13,8 @@ class TradingSignal:
 
     action: str
 
+    score: int
+
     confidence: int
 
     reason: str
