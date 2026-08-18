@@ -67,7 +67,7 @@ class DecisionEngine:
 
             "action": signal.action,
 
-            "score": signal.confidence,
+            "score": signal.score,
 
             "confidence": signal.confidence,
 
