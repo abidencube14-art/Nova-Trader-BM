@@ -86,29 +86,11 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # RSI FILTER
+        # RSI
         # ----------------------------------
 
-        # Strongly overbought
-        if rsi > 70:
-
-            sell_score += 1
-
-            sell_reasons.append(
-                "RSI overbought"
-            )
-
-        # Strongly oversold
-        elif rsi < 30:
-
-            buy_score += 1
-
-            buy_reasons.append(
-                "RSI oversold"
-            )
-
-        # Healthy BUY zone
-        elif 50 <= rsi <= 65:
+        # Healthy bullish RSI
+        if 50 <= rsi <= 65:
 
             buy_score += 1
 
@@ -116,7 +98,7 @@ class TradingRules:
                 "RSI supports BUY"
             )
 
-        # Healthy SELL zone
+        # Healthy bearish RSI
         elif 35 <= rsi < 50:
 
             sell_score += 1
@@ -125,44 +107,35 @@ class TradingRules:
                 "RSI supports SELL"
             )
 
-        # Neutral zone
-        else:
+        # ----------------------------------
+        # EXTREME RSI CONDITIONS
+        # ----------------------------------
 
-            buy_reasons.append(
-                "RSI neutral"
-            )
+        elif rsi > 70:
+
+            sell_score += 1
 
             sell_reasons.append(
-                "RSI neutral"
+                "RSI overbought"
+            )
+
+        elif rsi < 30:
+
+            buy_score += 1
+
+            buy_reasons.append(
+                "RSI oversold"
             )
 
         # ----------------------------------
-        # HARD RSI SAFETY FILTER
+        # FINAL DECISION
         # ----------------------------------
 
-        # Do NOT buy when extremely overbought
-        if rsi >= 75:
+        # Strong BUY requires:
+        # - at least 3 BUY points
+        # - BUY must clearly beat SELL
 
-            return (
-                sell_score,
-                "SELL",
-                sell_reasons
-            )
-
-        # Do NOT sell when extremely oversold
-        if rsi <= 25:
-
-            return (
-                buy_score,
-                "BUY",
-                buy_reasons
-            )
-
-        # ----------------------------------
-        # FINAL RESULT
-        # ----------------------------------
-
-        if buy_score > sell_score:
+        if buy_score >= 3 and buy_score > sell_score:
 
             return (
                 buy_score,
@@ -170,18 +143,26 @@ class TradingRules:
                 buy_reasons
             )
 
-        if sell_score > buy_score:
+        # Strong SELL requires:
+        # - at least 3 SELL points
+        # - SELL must clearly beat BUY
+
+        if sell_score >= 3 and sell_score > buy_score:
 
             return (
                 sell_score,
                 "SELL",
                 sell_reasons
             )
+
+        # ----------------------------------
+        # CONFLICT / WEAK SIGNAL
+        # ----------------------------------
 
         return (
-            0,
+            max(buy_score, sell_score),
             "WAIT",
             [
-                "BUY and SELL scores are equal"
+                "Signal confirmation insufficient"
             ]
         )
