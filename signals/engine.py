@@ -118,8 +118,10 @@ class SignalEngine:
 
             action=action,
 
+            score=score,
+
             confidence=confidence,
 
             reason=", ".join(reasons)
 
-            )
+                 )
