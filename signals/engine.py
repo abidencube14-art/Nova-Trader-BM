@@ -31,11 +31,15 @@ class SignalEngine:
             4
         )
 
-        if direction == "BUY" and confidence >= 75:
+        # ----------------------------------
+        # ACTION FILTER
+        # ----------------------------------
+
+        if direction == "BUY" and score >= 3:
 
             action = "BUY"
 
-        elif direction == "SELL" and confidence >= 75:
+        elif direction == "SELL" and score >= 3:
 
             action = "SELL"
 
@@ -124,4 +128,4 @@ class SignalEngine:
 
             reason=", ".join(reasons)
 
-                 )
+        )
