@@ -89,7 +89,6 @@ class TradingRules:
         # RSI
         # ----------------------------------
 
-        # Healthy bullish RSI
         if 50 <= rsi <= 65:
 
             buy_score += 1
@@ -98,7 +97,6 @@ class TradingRules:
                 "RSI supports BUY"
             )
 
-        # Healthy bearish RSI
         elif 35 <= rsi < 50:
 
             sell_score += 1
@@ -108,7 +106,7 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # EXTREME RSI CONDITIONS
+        # EXTREME RSI
         # ----------------------------------
 
         elif rsi > 70:
@@ -128,41 +126,84 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # FINAL DECISION
+        # CONFIRMATION FILTER
         # ----------------------------------
 
-        # Strong BUY requires:
-        # - at least 3 BUY points
-        # - BUY must clearly beat SELL
+        bullish_trend = (
 
-        if buy_score >= 3 and buy_score > sell_score:
+            ema20 > ema50
+            and ema50 > ema200
+
+        )
+
+        bearish_trend = (
+
+            ema20 < ema50
+            and ema50 < ema200
+
+        )
+
+        bullish_momentum = macd > signal
+
+        bearish_momentum = macd < signal
+
+        # ----------------------------------
+        # STRONG BUY
+        # ----------------------------------
+
+        if (
+
+            bullish_trend
+            and bullish_momentum
+            and buy_score >= 3
+            and buy_score > sell_score
+
+        ):
 
             return (
+
                 buy_score,
                 "BUY",
                 buy_reasons
+
             )
 
-        # Strong SELL requires:
-        # - at least 3 SELL points
-        # - SELL must clearly beat BUY
+        # ----------------------------------
+        # STRONG SELL
+        # ----------------------------------
 
-        if sell_score >= 3 and sell_score > buy_score:
+        if (
+
+            bearish_trend
+            and bearish_momentum
+            and sell_score >= 3
+            and sell_score > buy_score
+
+        ):
 
             return (
+
                 sell_score,
                 "SELL",
                 sell_reasons
+
             )
 
         # ----------------------------------
-        # CONFLICT / WEAK SIGNAL
+        # WAIT
         # ----------------------------------
 
         return (
-            max(buy_score, sell_score),
+
+            max(
+                buy_score,
+                sell_score
+            ),
+
             "WAIT",
+
             [
                 "Signal confirmation insufficient"
             ]
+
         )
