@@ -79,6 +79,8 @@ class Backtester:
                     resistance=market["resistance"],
 
                     volatility=market["volatility"],
+                    
+                    balance=self.simulator.account.get_balance(),
 
                     entry=latest["close"],
 
