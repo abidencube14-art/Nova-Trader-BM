@@ -22,7 +22,15 @@ class PositionSizer:
 
     ):
 
+        # ----------------------------------
+        # Validate inputs
+        # ----------------------------------
+
         if balance <= 0:
+
+            return 0.0
+
+        if risk_percent <= 0:
 
             return 0.0
 
@@ -34,16 +42,45 @@ class PositionSizer:
 
             return 0.0
 
-        risk_amount = balance * (
+        # ----------------------------------
+        # Maximum money we are willing
+        # to lose if SL is hit
+        # ----------------------------------
 
-            risk_percent / 100
+        risk_amount = (
+
+            balance
+            * risk_percent
+            / 100
 
         )
 
-        lot = risk_amount / (
+        # ----------------------------------
+        # Position size
+        # ----------------------------------
 
-            stop_loss_pips * pip_value
+        lot = (
+
+            risk_amount
+            / (
+                stop_loss_pips
+                * pip_value
+            )
 
         )
 
-        return round(lot, 5)
+        # ----------------------------------
+        # Safety
+        # ----------------------------------
+
+        if lot <= 0:
+
+            return 0.0
+
+        return round(
+
+            lot,
+
+            5
+
+        )
