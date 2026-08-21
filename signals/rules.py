@@ -106,7 +106,7 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # EXTREME RSI
+        # RSI EXTREMES
         # ----------------------------------
 
         elif rsi > 70:
@@ -126,7 +126,7 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # CONFIRMATION FILTER
+        # MARKET STRUCTURE
         # ----------------------------------
 
         bullish_trend = (
@@ -143,9 +143,33 @@ class TradingRules:
 
         )
 
-        bullish_momentum = macd > signal
+        bullish_momentum = (
 
-        bearish_momentum = macd < signal
+            macd > signal
+
+        )
+
+        bearish_momentum = (
+
+            macd < signal
+
+        )
+
+        # ----------------------------------
+        # RSI SAFETY FILTER
+        # ----------------------------------
+
+        buy_rsi_allowed = (
+
+            rsi <= 70
+
+        )
+
+        sell_rsi_allowed = (
+
+            rsi >= 30
+
+        )
 
         # ----------------------------------
         # STRONG BUY
@@ -155,6 +179,7 @@ class TradingRules:
 
             bullish_trend
             and bullish_momentum
+            and buy_rsi_allowed
             and buy_score >= 3
             and buy_score > sell_score
 
@@ -176,6 +201,7 @@ class TradingRules:
 
             bearish_trend
             and bearish_momentum
+            and sell_rsi_allowed
             and sell_score >= 3
             and sell_score > buy_score
 
@@ -206,4 +232,4 @@ class TradingRules:
                 "Signal confirmation insufficient"
             ]
 
-        )
+            )
