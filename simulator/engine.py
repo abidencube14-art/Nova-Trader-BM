@@ -66,6 +66,43 @@ class SimulatorEngine:
 
         self.history.add(trade)
 
+        # ----------------------------------
+        # TRADE DIAGNOSTIC
+        # ----------------------------------
+
+        if len(self.history.trades) <= 5:
+
+            print()
+            print("-----------------------------------")
+            print("NOVA TRADE DIAGNOSTIC")
+            print("-----------------------------------")
+
+            print(
+                f"Symbol : {symbol}"
+            )
+
+            print(
+                f"Action : {trade.action}"
+            )
+
+            print(
+                f"Lot    : {trade.lot}"
+            )
+
+            print(
+                f"Entry  : {trade.entry}"
+            )
+
+            print(
+                f"SL     : {trade.sl}"
+            )
+
+            print(
+                f"TP     : {trade.tp}"
+            )
+
+            print("-----------------------------------")
+
         return trade
 
     def check_exit(
@@ -167,7 +204,6 @@ class SimulatorEngine:
         units = (
 
             trade.lot
-
             * self.contract_size
 
         )
@@ -185,7 +221,6 @@ class SimulatorEngine:
             profit_loss = (
 
                 price_difference
-
                 * units
 
             )
@@ -209,9 +244,7 @@ class SimulatorEngine:
                 profit_loss = (
 
                     price_difference
-
                     * units
-
                     / exit_price
 
                 )
@@ -225,7 +258,6 @@ class SimulatorEngine:
             profit_loss = (
 
                 price_difference
-
                 * units
 
             )
@@ -245,7 +277,6 @@ class SimulatorEngine:
         trade.profit_loss = round(
 
             trade.profit_loss
-
             - self.commission,
 
             2
