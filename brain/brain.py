@@ -5,11 +5,8 @@ Nova Brain
 """
 
 from brain.memory import TradingMemory
-
 from brain.reasoning import Reasoning
-
 from decision.decision_engine import DecisionEngine
-
 from models.trading_decision import TradingDecision
 
 
@@ -26,7 +23,7 @@ class NovaBrain:
     def think(
 
         self,
-        
+
         symbol,
 
         trend,
@@ -41,6 +38,8 @@ class NovaBrain:
 
         volatility,
 
+        balance=10,
+
         entry=0
 
     ):
@@ -52,7 +51,7 @@ class NovaBrain:
             trend=trend,
 
             indicators=indicators,
-           
+
             candle=candle,
 
             support=support,
@@ -60,6 +59,8 @@ class NovaBrain:
             resistance=resistance,
 
             volatility=volatility,
+
+            balance=balance,
 
             entry=entry
 
