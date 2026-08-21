@@ -20,7 +20,7 @@ class DecisionEngine:
     def evaluate(
 
         self,
-        
+
         symbol,
 
         trend,
@@ -52,7 +52,7 @@ class DecisionEngine:
         risk = self.risk_engine.evaluate(
 
             decision=signal,
-            
+
             symbol=symbol,
 
             balance=balance,
