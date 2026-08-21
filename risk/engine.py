@@ -39,12 +39,32 @@ class RiskEngine:
 
     ):
 
+        # ----------------------------------
+        # Signal permission
+        # ----------------------------------
+
         if not self.filters.allow(decision):
 
             return None
 
         # ----------------------------------
-        # Calculate direction-aware SL
+        # Validate market data
+        # ----------------------------------
+
+        if balance <= 0:
+
+            return None
+
+        if entry <= 0:
+
+            return None
+
+        if atr <= 0:
+
+            return None
+
+        # ----------------------------------
+        # Direction-aware SL
         # ----------------------------------
 
         sl = self.sl.calculate(
@@ -58,7 +78,7 @@ class RiskEngine:
         )
 
         # ----------------------------------
-        # Calculate direction-aware TP
+        # Direction-aware TP
         # ----------------------------------
 
         tp = self.tp.calculate(
@@ -86,7 +106,7 @@ class RiskEngine:
             return None
 
         # ----------------------------------
-        # Pair-specific pip size
+        # Pair pip size
         # ----------------------------------
 
         if symbol.endswith("JPY"):
@@ -97,23 +117,60 @@ class RiskEngine:
 
             pip_size = 0.0001
 
+        # ----------------------------------
+        # Stop distance in pips
+        # ----------------------------------
+
         stop_loss_pips = (
 
-            stop_distance / pip_size
+            stop_distance
+            / pip_size
 
         )
 
+        if stop_loss_pips <= 0:
+
+            return None
+
         # ----------------------------------
         # Pip value
+        #
+        # Approximate USD account pip value
+        # for a standard 1-lot position.
         # ----------------------------------
 
-        if symbol.endswith("JPY"):
+        if symbol.endswith("USD"):
 
-            pip_value = 9.0
+            # EURUSD / GBPUSD / AUDUSD
+            pip_value = 10.0
+
+        elif symbol.startswith("USD"):
+
+            # USDJPY
+            #
+            # Pip value in USD depends on
+            # the current USDJPY price.
+            #
+            # For 1 standard lot:
+            #
+            # 100000 * 0.01 / price
+            # --------------------------------
+
+            pip_value = (
+
+                100000
+                * pip_size
+                / entry
+
+            )
 
         else:
 
-            pip_value = 10.0
+            return None
+
+        if pip_value <= 0:
+
+            return None
 
         # ----------------------------------
         # Position size
@@ -134,6 +191,10 @@ class RiskEngine:
         if lot <= 0:
 
             return None
+
+        # ----------------------------------
+        # Final risk package
+        # ----------------------------------
 
         return {
 
