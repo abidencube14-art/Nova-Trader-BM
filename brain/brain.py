@@ -5,8 +5,11 @@ Nova Brain
 """
 
 from brain.memory import TradingMemory
+
 from brain.reasoning import Reasoning
+
 from decision.decision_engine import DecisionEngine
+
 from models.trading_decision import TradingDecision
 
 
