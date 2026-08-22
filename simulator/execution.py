@@ -10,6 +10,10 @@ from simulator.position import Position
 
 class SimulatorExecution:
 
+    # ======================================
+    # OPEN TRADE
+    # ======================================
+
     def open_trade(
 
         self,
@@ -44,6 +48,10 @@ class SimulatorExecution:
 
         )
 
+    # ======================================
+    # CLOSE TRADE
+    # ======================================
+
     def close_trade(
 
         self,
@@ -56,30 +64,29 @@ class SimulatorExecution:
 
     ):
 
+        # ----------------------------------
+        # Already closed
+        # ----------------------------------
+
         if position.status != "OPEN":
 
             return position
 
+        # ----------------------------------
+        # Store exit information
+        # ----------------------------------
+
         position.exit_price = current_price
 
-        if position.action == "BUY":
+        position.close_reason = reason
 
-            position.profit_loss = (
-
-                current_price - position.entry
-
-            ) * position.lot
-
-        elif position.action == "SELL":
-
-            position.profit_loss = (
-
-                position.entry - current_price
-
-            ) * position.lot
+        # ----------------------------------
+        # P/L is NOT calculated here.
+        #
+        # SimulatorEngine is responsible
+        # for calculating monetary P/L.
+        # ----------------------------------
 
         position.status = "CLOSED"
-
-        position.close_reason = reason
 
         return position
