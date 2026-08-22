@@ -38,13 +38,9 @@ class SimulatorEngine:
     def execute(
 
         self,
-
         symbol,
-
         decision,
-
         risk,
-
         entry
 
     ):
@@ -82,15 +78,10 @@ class SimulatorEngine:
         trade = self.execution.open_trade(
 
             symbol,
-
             decision.action,
-
             lot,
-
             entry,
-
             sl,
-
             tp
 
         )
@@ -144,11 +135,8 @@ class SimulatorEngine:
     def check_exit(
 
         self,
-
         trade,
-
         high,
-
         low
 
     ):
@@ -187,13 +175,6 @@ class SimulatorEngine:
 
             )
 
-            # ----------------------------------
-            # Conservative candle assumption
-            #
-            # If both SL and TP are touched,
-            # assume SL was hit first.
-            # ----------------------------------
-
             if stop_hit:
 
                 exit_price = trade.sl
@@ -224,13 +205,6 @@ class SimulatorEngine:
 
             )
 
-            # ----------------------------------
-            # Conservative candle assumption
-            #
-            # If both SL and TP are touched,
-            # assume SL was hit first.
-            # ----------------------------------
-
             if stop_hit:
 
                 exit_price = trade.sl
@@ -258,9 +232,7 @@ class SimulatorEngine:
         trade = self.execution.close_trade(
 
             trade,
-
             exit_price,
-
             close_reason
 
         )
@@ -283,9 +255,9 @@ class SimulatorEngine:
 
             )
 
-        # ----------------------------------
+        # ==================================
         # Convert lots to units
-        # ----------------------------------
+        # ==================================
 
         units = (
 
@@ -296,6 +268,9 @@ class SimulatorEngine:
 
         # ==================================
         # USD-QUOTED PAIRS
+        # EURUSD
+        # GBPUSD
+        # AUDUSD
         # ==================================
 
         if trade.symbol.endswith("USD"):
@@ -309,6 +284,7 @@ class SimulatorEngine:
 
         # ==================================
         # USD-BASE PAIRS
+        # USDJPY
         # ==================================
 
         elif trade.symbol.startswith("USD"):
@@ -353,7 +329,6 @@ class SimulatorEngine:
         trade.profit_loss = round(
 
             profit_loss,
-
             5
 
         )
@@ -364,4 +339,72 @@ class SimulatorEngine:
 
         self.account.apply_profit_loss(
 
-            trade
+            trade.profit_loss
+
+        )
+
+        # ==================================
+        # EXIT DIAGNOSTIC
+        # ==================================
+
+        self.exit_count += 1
+
+        if self.exit_count <= 15:
+
+            print()
+
+            print("-----------------------------------")
+            print("NOVA EXIT DIAGNOSTIC")
+            print("-----------------------------------")
+
+            print(
+                f"Symbol      : {trade.symbol}"
+            )
+
+            print(
+                f"Action      : {trade.action}"
+            )
+
+            print(
+                f"Entry       : {trade.entry}"
+            )
+
+            print(
+                f"Candle High : {high}"
+            )
+
+            print(
+                f"Candle Low  : {low}"
+            )
+
+            print(
+                f"SL          : {trade.sl}"
+            )
+
+            print(
+                f"TP          : {trade.tp}"
+            )
+
+            print(
+                f"Stop Hit    : {stop_hit}"
+            )
+
+            print(
+                f"Target Hit  : {target_hit}"
+            )
+
+            print(
+                f"Exit Price  : {exit_price}"
+            )
+
+            print(
+                f"Reason      : {close_reason}"
+            )
+
+            print(
+                f"P/L         : ${trade.profit_loss:.5f}"
+            )
+
+            print("-----------------------------------")
+
+        return trade
