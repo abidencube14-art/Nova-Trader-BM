@@ -20,11 +20,19 @@ class SimulatorEngine:
 
         self.history = TradeHistory()
 
-        # Commission charged per completed trade.
+        # ----------------------------------
+        # Simulation settings
+        # ----------------------------------
+
+        # Small fixed commission per completed trade.
         self.commission = 0.01
 
         # Standard FX contract size.
         self.contract_size = 100000
+
+    # ======================================
+    # EXECUTE TRADE
+    # ======================================
 
     def execute(
 
@@ -40,13 +48,43 @@ class SimulatorEngine:
 
     ):
 
+        # ----------------------------------
+        # Ignore WAIT
+        # ----------------------------------
+
+        if decision is None:
+
+            return None
+
         if decision.action == "WAIT":
 
             return None
 
+        # ----------------------------------
+        # Risk must exist
+        # ----------------------------------
+
         if risk is None:
 
             return None
+
+        lot = risk.get("lot", 0)
+
+        sl = risk.get("sl")
+
+        tp = risk.get("tp")
+
+        if lot <= 0:
+
+            return None
+
+        if sl is None or tp is None:
+
+            return None
+
+        # ----------------------------------
+        # Open position
+        # ----------------------------------
 
         trade = self.execution.open_trade(
 
@@ -54,13 +92,13 @@ class SimulatorEngine:
 
             decision.action,
 
-            risk["lot"],
+            lot,
 
             entry,
 
-            risk["sl"],
+            sl,
 
-            risk["tp"]
+            tp
 
         )
 
@@ -73,6 +111,7 @@ class SimulatorEngine:
         if len(self.history.trades) <= 5:
 
             print()
+
             print("-----------------------------------")
             print("NOVA TRADE DIAGNOSTIC")
             print("-----------------------------------")
@@ -105,6 +144,10 @@ class SimulatorEngine:
 
         return trade
 
+    # ======================================
+    # CHECK EXIT
+    # ======================================
+
     def check_exit(
 
         self,
@@ -129,49 +172,90 @@ class SimulatorEngine:
 
         close_reason = None
 
-        # ----------------------------------
-        # BUY
-        # ----------------------------------
+        # ==================================
+        # BUY POSITION
+        # ==================================
 
         if trade.action == "BUY":
 
-            if low <= trade.sl:
+            stop_hit = (
+
+                low <= trade.sl
+
+            )
+
+            target_hit = (
+
+                high >= trade.tp
+
+            )
+
+            # ----------------------------------
+            # Conservative assumption:
+            #
+            # If both SL and TP occur inside
+            # the same candle, assume SL was hit
+            # first.
+            # ----------------------------------
+
+            if stop_hit:
 
                 exit_price = trade.sl
 
                 close_reason = "STOP_LOSS"
 
-            elif high >= trade.tp:
+            elif target_hit:
 
                 exit_price = trade.tp
 
                 close_reason = "TAKE_PROFIT"
 
-        # ----------------------------------
-        # SELL
-        # ----------------------------------
+        # ==================================
+        # SELL POSITION
+        # ==================================
 
         elif trade.action == "SELL":
 
-            if high >= trade.sl:
+            stop_hit = (
+
+                high >= trade.sl
+
+            )
+
+            target_hit = (
+
+                low <= trade.tp
+
+            )
+
+            # ----------------------------------
+            # Conservative assumption:
+            # SL first if both are touched.
+            # ----------------------------------
+
+            if stop_hit:
 
                 exit_price = trade.sl
 
                 close_reason = "STOP_LOSS"
 
-            elif low <= trade.tp:
+            elif target_hit:
 
                 exit_price = trade.tp
 
                 close_reason = "TAKE_PROFIT"
+
+        # ==================================
+        # No exit yet
+        # ==================================
 
         if exit_price is None:
 
             return trade
 
-        # ----------------------------------
-        # Close trade
-        # ----------------------------------
+        # ==================================
+        # Close position
+        # ==================================
 
         trade = self.execution.close_trade(
 
@@ -183,9 +267,9 @@ class SimulatorEngine:
 
         )
 
-        # ----------------------------------
-        # Calculate monetary P/L correctly
-        # ----------------------------------
+        # ==================================
+        # Calculate REAL FX P/L
+        # ==================================
 
         price_difference = (
 
@@ -201,6 +285,10 @@ class SimulatorEngine:
 
             )
 
+        # ----------------------------------
+        # Convert lots to units
+        # ----------------------------------
+
         units = (
 
             trade.lot
@@ -208,13 +296,13 @@ class SimulatorEngine:
 
         )
 
-        # ----------------------------------
-        # USD-quoted pairs
+        # ==================================
+        # USD-QUOTED PAIRS
         #
         # EURUSD
         # GBPUSD
         # AUDUSD
-        # ----------------------------------
+        # ==================================
 
         if trade.symbol.endswith("USD"):
 
@@ -225,13 +313,14 @@ class SimulatorEngine:
 
             )
 
-        # ----------------------------------
-        # USD-base pairs
+        # ==================================
+        # USD-BASE PAIRS
         #
         # USDJPY
         #
-        # Convert JPY P/L back to USD.
-        # ----------------------------------
+        # Price difference is in JPY.
+        # Convert JPY profit/loss back to USD.
+        # ==================================
 
         elif trade.symbol.startswith("USD"):
 
@@ -249,9 +338,9 @@ class SimulatorEngine:
 
                 )
 
-        # ----------------------------------
-        # Fallback for other currency pairs
-        # ----------------------------------
+        # ==================================
+        # FALLBACK
+        # ==================================
 
         else:
 
@@ -262,30 +351,27 @@ class SimulatorEngine:
 
             )
 
+        # ==================================
+        # Apply commission
+        # ==================================
+
+        profit_loss -= self.commission
+
+        # ----------------------------------
+        # Round monetary result
+        # ----------------------------------
+
         trade.profit_loss = round(
 
             profit_loss,
 
-            2
+            5
 
         )
 
-        # ----------------------------------
-        # Commission
-        # ----------------------------------
-
-        trade.profit_loss = round(
-
-            trade.profit_loss
-            - self.commission,
-
-            2
-
-        )
-
-        # ----------------------------------
+        # ==================================
         # Update account
-        # ----------------------------------
+        # ==================================
 
         self.account.apply_profit_loss(
 
