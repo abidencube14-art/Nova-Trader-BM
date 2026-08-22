@@ -24,11 +24,12 @@ class SimulatorEngine:
         # Simulation settings
         # ----------------------------------
 
-        # Small fixed commission per completed trade.
         self.commission = 0.01
 
-        # Standard FX contract size.
         self.contract_size = 100000
+
+        # Exit diagnostics
+        self.exit_count = 0
 
     # ======================================
     # EXECUTE TRADE
@@ -48,10 +49,6 @@ class SimulatorEngine:
 
     ):
 
-        # ----------------------------------
-        # Ignore WAIT
-        # ----------------------------------
-
         if decision is None:
 
             return None
@@ -59,10 +56,6 @@ class SimulatorEngine:
         if decision.action == "WAIT":
 
             return None
-
-        # ----------------------------------
-        # Risk must exist
-        # ----------------------------------
 
         if risk is None:
 
@@ -105,7 +98,7 @@ class SimulatorEngine:
         self.history.add(trade)
 
         # ----------------------------------
-        # TRADE DIAGNOSTIC
+        # Trade diagnostic
         # ----------------------------------
 
         if len(self.history.trades) <= 5:
@@ -172,6 +165,10 @@ class SimulatorEngine:
 
         close_reason = None
 
+        stop_hit = False
+
+        target_hit = False
+
         # ==================================
         # BUY POSITION
         # ==================================
@@ -191,11 +188,10 @@ class SimulatorEngine:
             )
 
             # ----------------------------------
-            # Conservative assumption:
+            # Conservative candle assumption
             #
-            # If both SL and TP occur inside
-            # the same candle, assume SL was hit
-            # first.
+            # If both SL and TP are touched,
+            # assume SL was hit first.
             # ----------------------------------
 
             if stop_hit:
@@ -229,8 +225,10 @@ class SimulatorEngine:
             )
 
             # ----------------------------------
-            # Conservative assumption:
-            # SL first if both are touched.
+            # Conservative candle assumption
+            #
+            # If both SL and TP are touched,
+            # assume SL was hit first.
             # ----------------------------------
 
             if stop_hit:
@@ -246,7 +244,7 @@ class SimulatorEngine:
                 close_reason = "TAKE_PROFIT"
 
         # ==================================
-        # No exit yet
+        # No exit
         # ==================================
 
         if exit_price is None:
@@ -298,10 +296,6 @@ class SimulatorEngine:
 
         # ==================================
         # USD-QUOTED PAIRS
-        #
-        # EURUSD
-        # GBPUSD
-        # AUDUSD
         # ==================================
 
         if trade.symbol.endswith("USD"):
@@ -315,11 +309,6 @@ class SimulatorEngine:
 
         # ==================================
         # USD-BASE PAIRS
-        #
-        # USDJPY
-        #
-        # Price difference is in JPY.
-        # Convert JPY profit/loss back to USD.
         # ==================================
 
         elif trade.symbol.startswith("USD"):
@@ -352,14 +341,14 @@ class SimulatorEngine:
             )
 
         # ==================================
-        # Apply commission
+        # Commission
         # ==================================
 
         profit_loss -= self.commission
 
-        # ----------------------------------
-        # Round monetary result
-        # ----------------------------------
+        # ==================================
+        # Store P/L
+        # ==================================
 
         trade.profit_loss = round(
 
@@ -375,8 +364,4 @@ class SimulatorEngine:
 
         self.account.apply_profit_loss(
 
-            trade.profit_loss
-
-        )
-
-        return trade
+            trade
