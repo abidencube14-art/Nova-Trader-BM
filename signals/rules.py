@@ -16,6 +16,10 @@ class TradingRules:
         buy_reasons = []
         sell_reasons = []
 
+        # ----------------------------------
+        # Read indicators
+        # ----------------------------------
+
         rsi = indicators["rsi"]
 
         ema20 = indicators["ema20"]
@@ -26,7 +30,64 @@ class TradingRules:
         signal = indicators["signal"]
 
         # ----------------------------------
-        # EMA20 / EMA50
+        # EMA TREND
+        # ----------------------------------
+
+        bullish_trend = (
+
+            ema20 > ema50
+            and ema50 > ema200
+
+        )
+
+        bearish_trend = (
+
+            ema20 < ema50
+            and ema50 < ema200
+
+        )
+
+        # ----------------------------------
+        # MACD MOMENTUM
+        # ----------------------------------
+
+        bullish_momentum = (
+
+            macd > signal
+
+        )
+
+        bearish_momentum = (
+
+            macd < signal
+
+        )
+
+        # ----------------------------------
+        # RSI FILTER
+        #
+        # RSI > 70 = overbought
+        # RSI < 30 = oversold
+        #
+        # Extreme RSI does NOT automatically
+        # create a reversal trade.
+        # It blocks the normal trend entry.
+        # ----------------------------------
+
+        bullish_rsi = (
+
+            50 <= rsi <= 70
+
+        )
+
+        bearish_rsi = (
+
+            30 <= rsi < 50
+
+        )
+
+        # ----------------------------------
+        # SCORE BUY CONDITIONS
         # ----------------------------------
 
         if ema20 > ema50:
@@ -66,7 +127,7 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # MACD MOMENTUM
+        # MACD
         # ----------------------------------
 
         if macd > signal:
@@ -89,7 +150,7 @@ class TradingRules:
         # RSI
         # ----------------------------------
 
-        if 50 <= rsi <= 65:
+        if bullish_rsi:
 
             buy_score += 1
 
@@ -97,7 +158,7 @@ class TradingRules:
                 "RSI supports BUY"
             )
 
-        elif 35 <= rsi < 50:
+        elif bearish_rsi:
 
             sell_score += 1
 
@@ -106,89 +167,63 @@ class TradingRules:
             )
 
         # ----------------------------------
-        # RSI EXTREMES
+        # EXTREME RSI PROTECTION
         # ----------------------------------
 
-        elif rsi > 70:
+        if rsi > 70:
 
-            sell_score += 1
+            return (
 
-            sell_reasons.append(
-                "RSI overbought"
+                buy_score,
+
+                "WAIT",
+
+                [
+                    "RSI overbought - BUY blocked"
+                ]
+
             )
 
-        elif rsi < 30:
+        if rsi < 30:
 
-            buy_score += 1
+            return (
 
-            buy_reasons.append(
-                "RSI oversold"
+                sell_score,
+
+                "WAIT",
+
+                [
+                    "RSI oversold - SELL blocked"
+                ]
+
             )
-
-        # ----------------------------------
-        # MARKET STRUCTURE
-        # ----------------------------------
-
-        bullish_trend = (
-
-            ema20 > ema50
-            and ema50 > ema200
-
-        )
-
-        bearish_trend = (
-
-            ema20 < ema50
-            and ema50 < ema200
-
-        )
-
-        bullish_momentum = (
-
-            macd > signal
-
-        )
-
-        bearish_momentum = (
-
-            macd < signal
-
-        )
-
-        # ----------------------------------
-        # RSI SAFETY FILTER
-        # ----------------------------------
-
-        buy_rsi_allowed = (
-
-            rsi <= 70
-
-        )
-
-        sell_rsi_allowed = (
-
-            rsi >= 30
-
-        )
 
         # ----------------------------------
         # STRONG BUY
+        #
+        # All three major confirmations
+        # must agree:
+        #
+        # EMA trend
+        # MACD momentum
+        # RSI
         # ----------------------------------
 
         if (
 
             bullish_trend
             and bullish_momentum
-            and buy_rsi_allowed
-            and buy_score >= 3
-            and buy_score > sell_score
+            and bullish_rsi
+            and buy_score == 4
 
         ):
 
             return (
 
                 buy_score,
+
                 "BUY",
+
                 buy_reasons
 
             )
@@ -201,16 +236,17 @@ class TradingRules:
 
             bearish_trend
             and bearish_momentum
-            and sell_rsi_allowed
-            and sell_score >= 3
-            and sell_score > buy_score
+            and bearish_rsi
+            and sell_score == 4
 
         ):
 
             return (
 
                 sell_score,
+
                 "SELL",
+
                 sell_reasons
 
             )
@@ -232,4 +268,4 @@ class TradingRules:
                 "Signal confirmation insufficient"
             ]
 
-            )
+        )
