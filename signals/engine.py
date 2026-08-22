@@ -26,22 +26,43 @@ class SignalEngine:
             indicators
         )
 
+        # ----------------------------------
+        # Calculate confidence
+        # ----------------------------------
+
         confidence = self.confidence.calculate(
             score,
             4
         )
 
         # ----------------------------------
-        # ACTION FILTER
+        # ACTION
+        #
+        # TradingRules is the authority.
+        #
+        # If rules say WAIT, SignalEngine
+        # must NEVER turn that into a trade.
         # ----------------------------------
 
-        if direction == "BUY" and score >= 3:
+        if direction == "BUY":
 
-            action = "BUY"
+            if score >= 4:
 
-        elif direction == "SELL" and score >= 3:
+                action = "BUY"
 
-            action = "SELL"
+            else:
+
+                action = "WAIT"
+
+        elif direction == "SELL":
+
+            if score >= 4:
+
+                action = "SELL"
+
+            else:
+
+                action = "WAIT"
 
         else:
 
@@ -128,4 +149,4 @@ class SignalEngine:
 
             reason=", ".join(reasons)
 
-        )
+            )
